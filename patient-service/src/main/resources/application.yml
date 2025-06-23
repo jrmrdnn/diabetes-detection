@@ -1,0 +1,17 @@
+server:
+  port: ${PATIENT_SERVICE_PORT:8083}
+
+spring:
+  application:
+    name: patient-service
+  datasource:
+    url: ${MYSQL_URL:jdbc:mysql://localhost:3306/diabetes_detection?createDatabaseIfNotExist=true&serverTimezone=Europe/Paris}
+    username: ${MYSQL_USERNAME:root}
+    password: ${MYSQL_PASSWORD:password}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: ${MYSQL_DDL:update}
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
