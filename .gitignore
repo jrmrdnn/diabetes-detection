@@ -2,6 +2,7 @@ logs
 secrets
 **/target
 **/node_modules
+package-lock.json
 .env
 .idea
 .vscode
