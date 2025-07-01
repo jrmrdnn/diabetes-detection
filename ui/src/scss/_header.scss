@@ -1,0 +1,99 @@
+@use "sass:map";
+@use "mixins" as *;
+
+.header {
+  position: relative;
+  width: 100%;
+  padding: 0 30px;
+  background-color: var(--background-primary);
+  box-shadow: var(--box-shadow-header);
+  z-index: 100;
+  transition: box-shadow 0s 0.3s ease;
+
+  @include media-max(laptop) {
+    padding: 0 25px;
+  }
+
+  @include media-max(tablet) {
+    padding: 0 20px;
+  }
+
+  @include media-max(mobile_l) {
+    padding: 0 10px;
+  }
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 80px;
+  width: 100%;
+  max-width: map.get($breakpoints, laptop_l);
+  margin: 0 auto;
+
+  @include media-max(laptop) {
+    height: 70px;
+  }
+
+  @include media-max(tablet) {
+    height: 60px;
+  }
+
+  @include media-max(mobile_l) {
+    height: 50px;
+  }
+}
+
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 24px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--content-secondary);
+  cursor: pointer;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: var(--content-primary);
+  }
+
+  span {
+    background-image: url("./img/logo.webp");
+    background-size: cover;
+    width: 40px;
+    height: 40px;
+
+    @include media-max(laptop) {
+      width: 37.5px;
+      height: 37.5px;
+    }
+
+    @include media-max(tablet) {
+      width: 35px;
+      height: 35px;
+    }
+
+    @include media-max(mobile_l) {
+      width: 30px;
+      height: 30px;
+    }
+  }
+
+  @include media-max(laptop) {
+    gap: 12.5px;
+    font-size: 23px;
+  }
+
+  @include media-max(tablet) {
+    gap: 10px;
+    font-size: 22px;
+  }
+
+  @include media-max(mobile_l) {
+    gap: 5px;
+    font-size: 18px;
+  }
+}

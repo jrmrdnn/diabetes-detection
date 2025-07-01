@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head th:replace="~{fragments/head :: head('Diabetes detection', 'Application de détection du diabète')}"></head>
+<body>
+<header class="header" th:replace="~{fragments/header :: header}"></header>
+<div class="message-success" th:if="${successMessage}"><p th:text="${successMessage}"></p></div>
+<div class="message-error" th:if="${errorMessage}"><p th:text="${errorMessage}"></p></div>
+<main>
+    <div class="app-content">
+        <div class="app-title"><h1>Liste patients</h1>
+            <button class="btn btn-primary" th:onclick="|window.location.href='@{/patient/add}'|">
+                Ajouter un patient
+            </button>
+        </div>
+        <div class="app-subtitle">Nombre de patients:
+            <span th:text="${patients?.totalElements !=null ? patients.totalElements : 0}"></span>
+        </div>
+        <table class="app-table">
+            <thead>
+            <tr>
+                <th class="col-name">Nom et prénom</th>
+                <th>Adresse postale</th>
+                <th>Numéro de téléphone</th>
+                <th>Date de naissance</th>
+                <th>Genre</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="patient : ${patients?.data}"
+                th:onclick="|window.location.href='@{/patient/{id}(id=${patient.id})}'|">
+                <td data-label="Nom"
+                    th:text="${patient.lastName} + ' ' + ${patient.firstName}">
+                </td>
+                <td data-label="Adresse"
+                    th:text="${patient?.postalAddress !=null && patient.postalAddress !='' ? patient.postalAddress : 'inconnu'}">
+                </td>
+                <td data-label="Téléphone"
+                    th:text="${patient?.phoneNumber !=null && patient.phoneNumber !='' ? patient.phoneNumber : 'inconnu'}">
+                </td>
+                <td data-label="Date"
+                    th:text="${#temporals.format(patient.birthDate, 'EE dd MMM yyyy')}">
+                </td>
+                <td data-label="Genre" th:switch="${#strings.toUpperCase(patient.gender)}">
+                    <span th:case="'F'">Féminin</span>
+                    <span th:case="'M'">Masculin</span>
+                    <span th:case="*">Non renseigné</span>
+                </td>
+            </tr>
+            <tr th:if="${patients==null or patients.data.size()==0}">
+                <td class="no-data" colspan="5">Aucun patient trouvé</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+</body>
+</html>

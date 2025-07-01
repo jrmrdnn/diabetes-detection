@@ -15,6 +15,10 @@ export default {
     output: {
         file: "../frontend-service/src/main/resources/static/app.js",
         format: "es",
+        watch: !PROD ? {
+            include: "src/**",
+            clearScreen: false,
+        } : undefined,
     },
     plugins: [
         resolve(),

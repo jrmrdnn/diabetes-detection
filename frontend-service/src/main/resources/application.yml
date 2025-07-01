@@ -6,3 +6,5 @@ spring:
     name: frontend-service
   thymeleaf:
     cache: false
+
+baseUrl: ${APP_URL:http://localhost:8080}

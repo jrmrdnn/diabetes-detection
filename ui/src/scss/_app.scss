@@ -1,0 +1,268 @@
+@use "sass:map";
+@use "mixins" as *;
+
+.app-content {
+  position: relative;
+  width: 100%;
+  max-width: map.get($breakpoints, laptop_l);
+  margin: 0 auto;
+  padding: 20px;
+  background-color: var(--background-primary);
+  box-shadow: var(--box-shadow-card);
+  border-radius: var(--border-radius);
+
+  @include media-max(laptop) {
+    padding: 15px;
+  }
+
+  @include media-max(tablet) {
+    padding: 10px;
+  }
+
+  @include media-max(mobile_l) {
+    padding: 5px;
+  }
+}
+
+.app-title {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+
+  h1 {
+    color: var(--content-primary);
+    font-size: 28px;
+    font-weight: 700;
+
+    @include media-max(laptop) {
+      font-size: 26px;
+    }
+
+    @include media-max(tablet) {
+      font-size: 24px;
+    }
+
+    @include media-max(mobile_l) {
+      font-size: 22px;
+    }
+  }
+
+  button {
+    margin-left: auto;
+  }
+}
+
+.app-subtitle {
+  color: var(--content-secondary);
+  font-size: 16px;
+  margin-bottom: 20px;
+
+  span {
+    color: var(--content-positive);
+    font-size: 16px;
+    font-weight: 700;
+
+    @include media-max(laptop) {
+      font-size: 15.5px;
+    }
+
+    @include media-max(tablet) {
+      font-size: 15px;
+    }
+
+    @include media-max(mobile_l) {
+      font-size: 14px;
+    }
+  }
+
+  @include media-max(laptop) {
+    font-size: 15.5px;
+  }
+
+  @include media-max(tablet) {
+    font-size: 15px;
+  }
+
+  @include media-max(mobile_l) {
+    font-size: 14px;
+  }
+}
+
+.app-table {
+  width: 100%;
+  margin-bottom: 20px;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--content-disabled);
+  border-spacing: 0;
+  table-layout: fixed;
+
+  thead {
+    th {
+      background-color: var(--background-primary);
+      border-bottom: 1px solid var(--content-disabled);
+      padding: 20px 10px;
+      text-align: center;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+
+      span {
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        transition: color 0.3s ease;
+      }
+
+      svg {
+        position: relative;
+        top: 2px;
+      }
+
+      path {
+        transition: fill 0.3s ease;
+      }
+
+      &:hover {
+        span {
+          color: var(--content-accent);
+        }
+
+        path {
+          fill: var(--content-accent);
+        }
+      }
+
+      &:last-child {
+        width: 120px;
+      }
+    }
+
+    tr {
+      th {
+        &:first-child {
+          border-radius: var(--border-radius) 0 0 0;
+        }
+
+        &:last-child {
+          border-radius: 0 var(--border-radius) 0 0;
+        }
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      transition: background-color 0.3s;
+      cursor: pointer;
+
+      &:last-child {
+        td {
+          transition: color 0.3s;
+
+          &:first-child {
+            border-radius: 0 0 0 var(--border-radius);
+          }
+
+          &:last-child {
+            border-radius: 0 0 var(--border-radius) 0;
+          }
+        }
+      }
+
+      &:nth-child(odd) {
+        background-color: var(--background-secondary);
+      }
+
+      &:nth-child(even) {
+        background-color: var(--background-primary);
+      }
+
+      &:hover {
+        background-color: var(--content-accent);
+
+        td {
+          color: var(--background-primary);
+
+          span {
+            color: var(--background-primary);
+          }
+        }
+      }
+    }
+
+    td {
+      padding: 20px 10px;
+      text-align: center;
+      letter-spacing: 0.3px;
+      border-right: 1px solid var(--content-disabled);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      &:first-child {
+        text-align: left;
+        padding-left: 20px;
+        font-weight: 700;
+      }
+
+      &:last-child {
+        border-right: none;
+      }
+    }
+  }
+
+  .no-data {
+    text-align: center !important;
+    padding: 20px;
+    color: var(--content-disabled);
+  }
+
+  @include media-max(laptop) {
+    th {
+      font-size: 14px !important;
+      padding: 15px 5px !important;
+    }
+    td {
+      font-size: 14px !important;
+      padding: 15px 5px !important;
+    }
+  }
+
+  @include media-max(tablet) {
+    display: block;
+
+    thead {
+      display: none;
+    }
+
+    tbody, tr, th, td {
+      display: block;
+      font-size: 14px !important;
+      text-align: left !important;
+      border: none !important;
+    }
+
+    tr:hover td:before {
+      color: var(--background-primary);
+    }
+
+
+    td {
+      position: relative;
+      padding-left: 100px !important;
+
+      span {
+        font-size: 14px !important;
+      }
+
+      &:before {
+        position: absolute;
+        content: attr(data-label);
+        top: 0;
+        left: 0;
+        width: 100px;
+        padding: 15px 5px;
+        font-size: 14px !important;
+        font-weight: 700;
+      }
+    }
+  }
+}

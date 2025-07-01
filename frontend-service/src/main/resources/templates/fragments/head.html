@@ -1,0 +1,10 @@
+<head th:fragment="head(title, description)">
+    <meta charset="UTF-8"/>
+    <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title th:text="${title}">Diabetes detection</title>
+    <meta name="description" th:content="${description}"/>
+    <link rel="icon" th:href="@{/ico/logo.ico}" type="image/x-icon"/>
+    <link rel="stylesheet" th:href="@{/app.css}"/>
+    <script defer th:src="@{/app.js}" type="module"></script>
+</head>

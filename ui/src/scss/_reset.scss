@@ -1,0 +1,41 @@
+@use "sass:map";
+@use "mixins" as *;
+
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Roboto", sans-serif;
+  font-size: initial;
+  font-weight: 400;
+  color: var(--content-primary);
+  text-decoration: none;
+  user-select: none;
+}
+
+main {
+  padding: 20px;
+  background-color: var(--background-tertiary);
+  min-height: calc(100vh - 80px);
+  overflow-y: auto;
+
+  @include media-max(laptop) {
+    padding: 15px;
+  }
+
+  @include media-max(tablet) {
+    padding: 10px;
+  }
+
+  @include media-max(mobile_l) {
+    padding: 5px;
+  }
+}
+
+li {
+  list-style: none;
+}

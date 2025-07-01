@@ -1,0 +1,48 @@
+@use "sass:map" as *;
+
+$breakpoints: (
+        mobile_s: 320px,
+        mobile_m: 375px,
+        mobile_l: 425px,
+        tablet: 768px,
+        laptop: 1024px,
+        laptop_l: 1440px,
+        k: 2560px,
+);
+
+@mixin media-max($breakpoint) {
+  $value: get($breakpoints, $breakpoint);
+
+  @if $value {
+    @media (max-width: #{$value - 1px}) {
+      @content;
+    }
+  } @else {
+    @warn "Breakpoint '#{$breakpoint}' does not exist in $breakpoints.";
+  }
+}
+
+@mixin media-min($breakpoint) {
+  $value: get($breakpoints, $breakpoint);
+
+  @if $value {
+    @media (min-width: $value) {
+      @content;
+    }
+  } @else {
+    @warn "Breakpoint '#{$breakpoint}' does not exist in $breakpoints.";
+  }
+}
+
+@mixin media-between($min, $max) {
+  $min-value: get($breakpoints, $min);
+  $max-value: get($breakpoints, $max);
+
+  @if $min-value and $max-value {
+    @media (min-width: $min-value) and (max-width: #{$max-value - 1px}) {
+      @content;
+    }
+  } @else {
+    @warn "One or more breakpoints do not exist in $breakpoints.";
+  }
+}

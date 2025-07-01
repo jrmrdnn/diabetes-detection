@@ -1,0 +1,36 @@
+@use "sass:color";
+
+:root {
+  --background-primary: #fff;
+  --background-secondary: #f3f3f3;
+  --background-tertiary: #e8e8e8;
+
+  --background-warning: #f6bc2f;
+
+  --background-Light-accent: #eff4fe;
+  --background-Light-positive: #eaf6ed;
+  --background-Light-warning: #fdf2dc;
+  --background-Light-negative: #fff0ee;
+
+  --box-shadow-header: 0 2px 10px 0 rgba(0, 0, 0, 0.1);
+  --box-shadow-card: 0 5px 3px 0 rgba(0, 0, 0, 0.1);
+
+  --border: 1px solid rgba(0, 0, 0, 0.05);
+  --border-radius: 8px;
+  --border-radius-small: 4px;
+
+  --content-primary: #000;
+  --content-secondary: #4b4b4b;
+  --content-tertiary: #5e5e5e;
+  --content-disabled: #a6a6a6;
+
+  --content-accent: #276ef1;
+  --content-positive: #0e8345;
+  --content-warning: #9f6402;
+  --content-negative: #de1135;
+
+  --content-accent-hover: #{color.scale(#276ef1, $blackness: 10%)};
+  --content-positive-hover: #{color.scale(#0e8345, $blackness: 10%)};
+  --content-warning-hover: #{color.scale(#9f6402, $blackness: 10%)};
+  --content-negative-hover: #{color.scale(#de1135, $blackness: 10%)};
+}
