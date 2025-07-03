@@ -18,11 +18,17 @@
         <table class="app-table">
             <thead>
             <tr>
-                <th class="col-name">Nom et prénom</th>
+                <th class="col-name">
+                    <sort-component sortby="lastName" name="Nom et prénom">Nom et prénom</sort-component>
+                </th>
                 <th>Adresse postale</th>
                 <th>Numéro de téléphone</th>
-                <th>Date de naissance</th>
-                <th>Genre</th>
+                <th>
+                    <sort-component sortby="birthDate" name="Date de naissance">Date de naissance</sort-component>
+                </th>
+                <th>
+                    <sort-component sortby="gender" name="Genre">Genre</sort-component>
+                </th>
             </tr>
             </thead>
             <tbody>
