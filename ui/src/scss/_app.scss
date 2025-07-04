@@ -255,4 +255,16 @@
       }
     }
   }
+
+  @include media-max(laptop) {
+    margin-bottom: 15px;
+  }
+
+  @include media-max(tablet) {
+    margin-bottom: 10px;
+  }
+
+  @include media-max(mobile_l) {
+    margin-bottom: 5px;
+  }
 }

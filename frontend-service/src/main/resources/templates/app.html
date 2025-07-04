@@ -19,15 +19,15 @@
             <thead>
             <tr>
                 <th class="col-name">
-                    <sort-component sortby="lastName" name="Nom et prénom">Nom et prénom</sort-component>
+                    <sort-component name="Nom et prénom" sortby="lastName">Nom et prénom</sort-component>
                 </th>
                 <th>Adresse postale</th>
                 <th>Numéro de téléphone</th>
                 <th>
-                    <sort-component sortby="birthDate" name="Date de naissance">Date de naissance</sort-component>
+                    <sort-component name="Date de naissance" sortby="birthDate">Date de naissance</sort-component>
                 </th>
                 <th>
-                    <sort-component sortby="gender" name="Genre">Genre</sort-component>
+                    <sort-component name="Genre" sortby="gender">Genre</sort-component>
                 </th>
             </tr>
             </thead>
@@ -57,6 +57,13 @@
             </tr>
             </tbody>
         </table>
+        <pagination-component
+                class="app-pagination"
+                th:page-size="${patients?.pageSize !=null ? patients.pageSize : 5}"
+                th:total-pages="${patients?.totalPages !=null ? patients.totalPages : 1}"
+                th:current-page="${patients?.currentPage !=null ? patients.currentPage + 1 : 1}"
+                th:total-elements="${patients?.totalElements !=null ? patients.totalElements : 0}">
+        </pagination-component>
     </div>
 </main>
 </body>
