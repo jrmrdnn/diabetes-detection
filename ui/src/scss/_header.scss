@@ -97,3 +97,28 @@
     font-size: 18px;
   }
 }
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.header-search {
+  width: 28px;
+  height: 28px;
+}
+
+.header-search {
+  position: relative;
+  cursor: pointer;
+
+  svg path {
+    transition: color 0.3s ease;
+  }
+
+  &:hover svg path {
+    color: var(--content-accent);
+  }
+}
+
