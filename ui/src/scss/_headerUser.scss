@@ -1,0 +1,103 @@
+@use "sass:map";
+@use "mixins" as *;
+
+.header-user-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  background-color: var(--background-primary);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow-card);
+  width: 15rem;
+  overflow: hidden;
+  opacity: 0.99;
+  visibility: visible;
+  z-index: 10;
+  transform: translateY(0);
+
+  &.show {
+    opacity: 0.99;
+    transform: translateY(0);
+    animation: slideInUser 0.3s ease forwards;
+  }
+
+  &.hide {
+    opacity: 0;
+    transform: translateY(-5px);
+    animation: slideOutUser 0.3s ease forwards;
+  }
+
+  @include media-max(laptop) {
+    padding: 0 25px;
+  }
+
+  @include media-max(tablet) {
+    padding: 0 20px;
+  }
+
+  @include media-max(mobile_l) {
+    padding: 0 10px;
+  }
+}
+
+.header-user-profile {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0 2rem;
+  padding: 0.9rem 1.1rem;
+  border-bottom: var(--border);
+  background-color: var(--background-primary);
+}
+
+.header-user-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.header-user-name {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+
+  & span {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--content-secondary);
+  }
+}
+
+.header-user-item {
+  padding: 0.9rem 1.1rem;
+  cursor: pointer;
+  border-bottom: var(--border);
+  transition: all 0.3s ease;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 0;
+    background: linear-gradient(90deg, var(--content-accent), transparent);
+    transition: width 0.3s ease;
+  }
+
+  &:hover {
+    background: var(--background-rgba-primary);
+    color: var(--content-accent);
+    transform: translateX(0px);
+
+    &::before {
+      width: 3px;
+    }
+  }
+}

@@ -109,7 +109,12 @@
   height: 28px;
 }
 
-.header-search {
+.header-user {
+  width: 28px;
+  height: 32px;
+}
+
+.header-search, .header-user {
   position: relative;
   cursor: pointer;
 
