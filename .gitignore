@@ -3,7 +3,7 @@ secrets
 **/target
 **/node_modules
 package-lock.json
-.env
+#.env
 .idea
 .vscode
 .DS_Store

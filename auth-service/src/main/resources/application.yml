@@ -1,0 +1,28 @@
+server:
+  port: ${AUTH_SERVICE_PORT:8082}
+
+spring:
+  application:
+    name: auth-service
+  datasource:
+    url: ${MYSQL_URL:jdbc:mysql://localhost:3306/diabetes_detection?createDatabaseIfNotExist=true&serverTimezone=Europe/Paris}
+    username: ${MYSQL_USER:root}
+    password: ${MYSQL_PASSWORD:password}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: ${MYSQL_DDL:update}
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+
+jwt:
+  expiration: ${JWT_EXP:24}
+  private-key-path: ${JWT_PRIVATE_KEY_PATH:./secrets/jwt_private.pem}
+
+argon2:
+  iterations: ${ARGON2_ITERATIONS:10}
+  memory: ${ARGON2_MEMORY:65536}
+  parallelism: ${ARGON2_PARALLELISM:1}
+  saltLength: ${ARGON2_SALT_LENGTH:16}
+  hashLength: ${ARGON2_HASH_LENGTH:32}
