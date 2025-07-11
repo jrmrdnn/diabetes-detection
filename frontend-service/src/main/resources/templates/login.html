@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head th:replace="~{fragments/head :: head('Connexion | Diabetes detection', 'Connectez-vous pour accéder à l\'application')}"></head>
+<body>
+
+<div class="message-success" th:if="${successMessage}">
+    <p th:text="${successMessage}"></p>
+</div>
+<div class="message-error" th:if="${errorMessage}">
+    <p th:text="${errorMessage}"></p>
+</div>
+
+<main class="login">
+    <h1 class="login-title">Connexion</h1>
+    <div class="login-form" th:if="${username}">
+        <h2 class="login-subtitle">Vous êtes déjà connecté !!</h2>
+        <p class="login-txt">Vous possédez déjà un token d'authentification valide. </p>
+        <div class="login-content">
+            <button class="btn" onclick="window.location.href='/app'" type="button">Accéder à l'application</button>
+            <form method="post"
+                  onsubmit="return confirm('Êtes-vous sûr de vouloir vous déconnecter ?')"
+                  th:action="@{/login}">
+                <input name="_method"
+                       type="hidden"
+                       value="DELETE"/>
+                <button class="btn danger" type="submit">Se déconnecter</button>
+            </form>
+        </div>
+    </div>
+    <form class="login-form" method="post" th:action="@{/login}" th:object="${userDto}" th:unless="${username}">
+        <div class="login-control"><label class="login-label" for="username">Nom d'utilisateur :</label>
+            <input class="login-input" id="username" maxlength="50" minlength="2" name="username"
+                   placeholder="Nom d'utilisateur" required th:field="*{username}"
+                   title="Le nom d'utilisateur doit contenir entre 2 et 50 caractères." type="text"/>
+            <span class="login-span" th:errors="*{username}"
+                  th:if="${#fields.hasErrors('username')}">
+            </span>
+        </div>
+        <div class="login-control">
+            <label class="login-label" for="password">Mot de passe :</label>
+            <input class="login-input"
+                   id="password"
+                   maxlength="50"
+                   minlength="8"
+                   name="password"
+                   placeholder="Mot de passe"
+                   required
+                   th:field="*{password}"
+                   title="Le mot de passe doit contenir entre 8 et 50 caractères."
+                   type="password"/>
+            <span class="login-span" th:errors="*{password}" th:if="${#fields.hasErrors('password')}"></span>
+        </div>
+        <button class="btn" type="submit">Se connecter</button>
+    </form>
+</main>
+</body>
+</html>

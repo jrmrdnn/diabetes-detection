@@ -34,14 +34,14 @@ public class JwtUtil {
    *  The token is signed with the private key loaded from the KeyUtil.
    *  The token is set to expire after a specified duration.
    * </p>
-   * @param userDto the user data transfer object containing user information
+   * @param userId the ID of the user
+   * @param username the username of the user
    * @param httpRequest the HTTP request to extract the user's IP address
    * @return a signed JWT token as a string
    * @throws RuntimeException if there is an error during token generation
    * @see Algorithm
    * @see JWT
    * @see KeyUtil
-   * @see UserDto
    */
   public String generateToken(
     String userId,

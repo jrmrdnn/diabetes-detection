@@ -6,5 +6,15 @@ spring:
     name: frontend-service
   thymeleaf:
     cache: false
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
 
 baseUrl: ${APP_URL:http://localhost:8080}
+
+jwt:
+  expiration: ${JWT_EXPIRATION:24}
+
+cookie:
+  auth-name: ${COOKIE_AUTH_NAME:authToken}

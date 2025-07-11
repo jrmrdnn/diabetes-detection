@@ -1,5 +1,6 @@
 package com.medilabo.frontendService.feign;
 
+import com.medilabo.frontendService.config.FeignConfig;
 import com.medilabo.frontendService.dto.PatientDto;
 import com.medilabo.frontendService.dto.PatientsDto;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -7,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-@FeignClient(name = "patient-service", path = "/api/patients", url = "http://localhost:8080")
+@FeignClient(name = "patient-service", path = "/api/patients", url = "http://localhost:8083", configuration = FeignConfig.class)
 public interface PatientFeignClient {
     @GetMapping
     PatientsDto getAllPatients();

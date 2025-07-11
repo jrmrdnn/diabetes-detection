@@ -1,0 +1,35 @@
+.message-success,
+.message-error {
+  position: fixed;
+  top: 10px;
+  left: 0;
+  right: 0;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 15px 20px;
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+  border-radius: var(--border-radius);
+  z-index: 1000;
+  animation: slideIn 0.5s forwards, slideOut 0.5s forwards 5s;
+}
+
+.message-success {
+  background-color: var(--background-Light-positive);
+  border: 1px solid var(--content-positive);
+
+  p {
+    color: var(--content-positive);
+  }
+}
+
+.message-error {
+  background-color: var(--background-Light-negative);
+  border: 1px solid var(--content-negative);
+
+  p {
+    color: var(--content-negative);
+  }
+}

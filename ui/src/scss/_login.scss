@@ -1,0 +1,211 @@
+@use "mixins" as *;
+
+.login {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  background-color: var(--background-primary);
+  background-image: url("./img/background.webp");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+.login-title {
+  margin-bottom: 20px;
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 32px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  color: var(--content-primary);
+
+  @include media-max(laptop) {
+    font-size: 28px;
+  }
+
+  @include media-max(tablet) {
+    font-size: 26px;
+  }
+
+  @include media-max(mobile_l) {
+    font-size: 24px;
+  }
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 35px;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 40px;
+  background-color: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(var(--blur));
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow-card);
+
+  @include media-max(laptop) {
+    max-width: 366px;
+    gap: 30px;
+    padding: 35px;
+  }
+
+  @include media-max(tablet) {
+    max-width: 333px;
+    gap: 25px;
+    padding: 30px;
+  }
+
+  @include media-max(mobile_l) {
+    max-width: 300px;
+    gap: 20px;
+    padding: 20px;
+  }
+}
+
+.login-subtitle {
+  font-weight: 600;
+  text-align: center;
+  color: var(--content-positive);
+  font-size: 24px;
+
+  @include media-max(laptop) {
+    font-size: 22px;
+  }
+
+  @include media-max(tablet) {
+    font-size: 20px;
+  }
+
+  @include media-max(mobile_l) {
+    font-size: 18px;
+  }
+}
+
+.login-txt {
+  text-align: center;
+  color: var(--content-primary);
+  font-size: 18px;
+
+  @include media-max(laptop) {
+    font-size: 17px;
+  }
+
+  @include media-max(tablet) {
+    font-size: 16px;
+  }
+
+  @include media-max(mobile_l) {
+    font-size: 15px;
+  }
+}
+
+.login-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+
+  @include media-max(laptop) {
+    gap: 16.66px;
+  }
+
+  @include media-max(tablet) {
+    gap: 13.33px;
+  }
+
+  @include media-max(mobile_l) {
+    gap: 10px;
+  }
+}
+
+.login-control {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.login-input {
+  width: 100%;
+  height: 60px;
+  padding: 0 16px;
+  font-size: 18px;
+  font-weight: 500;
+  border-radius: var(--border-radius-small);
+  border: 1px solid var(--content-disabled);
+  background-color: var(--background-primary);
+  color: var(--content-primary);
+  outline: none;
+  caret-color: var(--content-primary);
+  transition: border-color 0.3s ease-in-out;
+
+  &::placeholder {
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--content-disabled);
+
+    @include media-max(laptop) {
+      font-size: 17px;
+    }
+
+    @include media-max(tablet) {
+      font-size: 16px;
+    }
+
+    @include media-max(mobile_l) {
+      font-size: 15px;
+    }
+  }
+
+  &:focus {
+    border: 1.5px solid var(--content-accent);
+  }
+
+  @include media-max(laptop) {
+    height: 56.66px;
+    font-size: 17px;
+  }
+
+  @include media-max(tablet) {
+    height: 53.33px;
+    font-size: 16px;
+  }
+
+  @include media-max(mobile_l) {
+    height: 50px;
+    font-size: 15px;
+  }
+}
+
+.login-label {
+  margin-left: 5px;
+  font-size: 18px;
+
+  @include media-max(laptop) {
+    font-size: 17px;
+  }
+
+  @include media-max(tablet) {
+    font-size: 16px;
+  }
+
+  @include media-max(mobile_l) {
+    font-size: 15px;
+  }
+}
+
+.login-span {
+  position: relative;
+  color: var(--content-negative);
+  margin-left: 10px;
+  font-size: 12px;
+}
