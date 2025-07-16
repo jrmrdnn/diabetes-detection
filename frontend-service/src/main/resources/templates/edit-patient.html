@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head
+        th:replace="~{fragments/head :: head( 'Modification du patient | Diabetes detection', 'Modification du patient' )}"
+></head>
+<body>
+<header class="header" th:replace="~{fragments/header :: header}"></header>
+<div class="message-success" th:if="${successMessage}">
+    <p th:text="${successMessage}"></p>
+</div>
+<div class="message-error" th:if="${errorMessage}">
+    <p th:text="${errorMessage}"></p>
+</div>
+<main>
+    <div class="app-content">
+        <div class="patient-title">
+            <svg height="40" th:onclick="|window.location.href='@{/app}'|" viewBox="0 0 24 24" width="40"
+                 xmlns="http://www.w3.org/2000/svg">
+                <g fill="var(--content-secondary)" stroke="var(--content-secondary)" stroke-linecap="round"
+                   stroke-linejoin="round" stroke-width="2">
+                    <path d="M19 12h-13.5" stroke-dasharray="16" stroke-dashoffset="16">
+                        <animate attributeName="stroke-dashoffset" dur="0.4s" fill="freeze" values="16;0"/>
+                    </path>
+                    <path d="M5 12l5 5M5 12l5 -5" stroke-dasharray="10" stroke-dashoffset="10">
+                        <animate attributeName="stroke-dashoffset" begin="0.4s" dur="0.4s" fill="freeze" values="10;0"/>
+                    </path>
+                </g>
+            </svg>
+            <h1>Modification du patient</h1>
+        </div>
+        <form class="patient-content" method="post" th:action="@{/patient/edit/{id}(id=${patient.id})}"
+              th:object="${patientDto}">
+            <input name="_method" type="hidden" value="PUT"/>
+            <div class="patient-flex">
+                <div class="patient-control">
+                    <label class="label" for="firstName">Prénom du patient :</label>
+                    <input class="input" disabled id="firstName" th:value="${patient.firstName}"/>
+                </div>
+                <div class="patient-control">
+                    <label class="label" for="lastName">Nom de famille du patient :</label>
+                    <input class="input" disabled id="lastName" th:value="${patient.lastName}"/>
+                </div>
+            </div>
+            <div class="patient-flex">
+                <div class="patient-control">
+                    <label class="label" for="genre">Genre du patient :</label>
+                    <input class="input" disabled id="genre"
+                           th:value="${#strings.toUpperCase(patient.gender) == 'M' ? 'Masculin' : (#strings.toUpperCase(patient.gender) == 'F' ? 'Féminin' : 'Non renseigné')}"/>
+                </div>
+                <div class="patient-control">
+                    <label class="label" for="birthDate">Date de naissance du patient :</label>
+                    <input class="input" disabled id="birthDate"
+                           th:value="${#temporals.format(patient.birthDate, 'EEEE dd MMMM yyyy')}"/>
+                </div>
+            </div>
+            <div class="patient-flex">
+                <div class="patient-control">
+                    <label class="label" for="phoneNumber">Numéro de téléphone du patient :</label>
+                    <input class="input" id="phoneNumber" name="phoneNumber" pattern="^0[6-7](\s\d{2}){4}$"
+                           placeholder="Numéro de téléphone" th:field="*{phoneNumber}"
+                           title="Le numéro de téléphone du patient doit être au format 0X XX XX XX." type="tel"/>
+                    <span class="span" th:errors="*{phoneNumber}" th:if="${#fields.hasErrors('phoneNumber')}"></span>
+                </div>
+            </div>
+            <div class="patient-control">
+                <label class="label" for="postalAddress">Adresse postale du patient :</label>
+                <input class="input" id="postalAddress" maxlength="255" minlength="2" placeholder="Adresse postale"
+                       th:field="*{postalAddress}"
+                       title="L'adresse postale du patient doit contenir entre 2 et 255 caractères." type="text"/>
+                <span class="span" th:errors="*{postalAddress}" th:if="${#fields.hasErrors('postalAddress')}"></span>
+            </div>
+            <button class="btn" type="submit">Modifier le patient</button>
+        </form>
+    </div>
+</main>
+</body>
+</html>

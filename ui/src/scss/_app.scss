@@ -16,11 +16,11 @@
   }
 
   @include media-max(tablet) {
-    padding: 10px;
+    padding: 15px 10px;
   }
 
   @include media-max(mobile_l) {
-    padding: 5px;
+    padding: 10px 5px;
   }
 }
 

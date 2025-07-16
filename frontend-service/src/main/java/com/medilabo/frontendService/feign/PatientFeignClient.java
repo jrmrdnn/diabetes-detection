@@ -22,7 +22,7 @@ public interface PatientFeignClient {
     );
 
     @GetMapping("/{id}")
-    PatientDto getPatientById(@PathVariable UUID id);
+    PatientsDto.Patient getPatientById(@PathVariable UUID id);
 
     @PostMapping("/add")
     String addPatient(PatientDto addPatientDto);

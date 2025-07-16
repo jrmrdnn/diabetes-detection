@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head th:replace="~{fragments/head :: head( ${'Patient: ' + (patient?.lastName ?: '?') + ' ' + (patient?.firstName ?: '?') + ' | Diabetes detection'}, 'Le détail du patient' )}"></head>
+<body>
+<header class="header" th:replace="~{fragments/header :: header}"></header>
+<div class="message-success" th:if="${successMessage}">
+    <p th:text="${successMessage}"></p>
+</div>
+<div class="message-error" th:if="${errorMessage}">
+    <p th:text="${errorMessage}"></p>
+</div>
+<main>
+    <div class="app-content">
+        <div class="patient-title">
+            <svg height="40" th:onclick="|window.location.href='@{/app}'|" viewBox="0 0 24 24" width="40"
+                 xmlns="http://www.w3.org/2000/svg">
+                <g stroke="var(--content-secondary)" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                    <path d="M19 12h-13.5" stroke-dasharray="16" stroke-dashoffset="16">
+                        <animate attributeName="stroke-dashoffset" dur="0.4s" fill="freeze" values="16;0"/>
+                    </path>
+                    <path d="M5 12l5 5M5 12l5 -5" stroke-dasharray="10" stroke-dashoffset="10">
+                        <animate attributeName="stroke-dashoffset" begin="0.4s" dur="0.4s" fill="freeze" values="10;0"/>
+                    </path>
+                </g>
+            </svg>
+            <h1 th:text="(${#strings.toUpperCase(patient?.gender)}=='M' ? 'M. ' : (${#strings.toUpperCase(patient?.gender)}=='F' ? 'Mme ' : '')) + (${#strings.toUpperCase(patient?.lastName) ?: 'Inconnu'}) + ' ' + (${patient?.firstName ?: ''})"></h1>
+            <button class="btn"
+                    th:if="${patient?.id !=null}"
+                    th:onclick="|window.location.href='@{/patient/edit/{id}(id=${patient.id})}'|">
+                Modifier
+            </button>
+        </div>
+        <div class="patient-content">
+            <div class="patient-info" th:switch="${#strings.toUpperCase(patient?.gender)}">
+                <svg height="32" viewBox="0 0 24 24" width="32" xmlns="http://www.w3.org/2000/svg">
+                    <g fill="var(--content-accent)" fill-opacity="0" stroke="var(--content-secondary)"
+                       stroke-linecap="round" stroke-linejoin="round"
+                       stroke-width="2">
+                        <path d="M12 5c1.66 0 3 1.34 3 3c0 1.66 -1.34 3 -3 3c-1.66 0 -3 -1.34 -3 -3c0 -1.66 1.34 -3 3 -3Z"
+                              stroke-dasharray="20"
+                              stroke-dashoffset="20">
+                            <animate attributeName="stroke-dashoffset" dur="0.4s" fill="freeze" values="20;0"/>
+                        </path>
+                        <path d="M12 14c4 0 7 2 7 3v2h-14v-2c0 -1 3 -3 7 -3Z" stroke-dasharray="36"
+                              stroke-dashoffset="36">
+                            <animate attributeName="stroke-dashoffset" begin="0.5s" dur="0.5s" fill="freeze"
+                                     values="36;0"/>
+                        </path>
+                        <animate attributeName="fill-opacity" begin="1.1s" dur="0.15s" fill="freeze" values="0;0.3"/>
+                    </g>
+                </svg>
+                <span th:case="'M'">Masculin</span>
+                <span th:case="'F'">Féminin</span>
+            </div>
+            <div class="patient-info">
+                <svg height="32" viewBox="0 0 24 24" width="32" xmlns="http://www.w3.org/2000/svg">
+                    <rect fill="var(--content-accent)" fill-opacity="0.3" height="0" width="14" x="5" y="5">
+                        <animate attributeName="height" begin="0.6s" dur="0.2s" fill="freeze" values="0;3"/>
+                    </rect>
+                    <g fill="none" stroke="var(--content-secondary)" stroke-linecap="round" stroke-linejoin="round"
+                       stroke-width="2">
+                        <path d="M12 4h7c0.55 0 1 0.45 1 1v14c0 0.55 -0.45 1 -1 1h-14c-0.55 0 -1 -0.45 -1 -1v-14c0 -0.55 0.45 -1 1 -1Z"
+                              stroke-dasharray="64"
+                              stroke-dashoffset="64">
+                            <animate attributeName="stroke-dashoffset" dur="0.6s" fill="freeze" values="64;0"/>
+                        </path>
+                        <path d="M7 4v-2M17 4v-2" stroke-dasharray="4" stroke-dashoffset="4">
+                            <animate attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" fill="freeze"
+                                     values="4;0"/>
+                        </path>
+                        <path d="M7 11h10" fill="var(--content-positive)" stroke-dasharray="12" stroke-dashoffset="12">
+                            <animate attributeName="stroke-dashoffset" begin="0.8s" dur="0.2s" fill="freeze"
+                                     values="12;0"/>
+                        </path>
+                        <path d="M7 15h7" stroke-dasharray="8" stroke-dashoffset="8">
+                            <animate attributeName="stroke-dashoffset" begin="1s" dur="0.2s" fill="freeze"
+                                     values="8;0"/>
+                        </path>
+                    </g>
+                </svg>
+                <span th:text="${(age !=null ? age + ' ans' : '')} + ' ' + ${#temporals.format(patient?.birthDate, '(dd/MM/yyyy)')}"></span>
+            </div>
+            <div class="patient-info">
+                <svg height="32" viewBox="0 0 24 24" width="32" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5 8.5l7 -5.5l7 5.5v12.5h-4v-8l-1 -1h-4l-1 1v8h-4v-12.5Z" fill="var(--content-accent)"
+                          fill-opacity="0">
+                        <animate attributeName="fill-opacity" begin="1.1s" dur="0.15s" fill="freeze" values="0;0.3"/>
+                    </path>
+                    <g fill="none" stroke="var(--content-secondary)" stroke-linecap="round" stroke-linejoin="round"
+                       stroke-width="2">
+                        <path d="M4.5 21.5h15" stroke-dasharray="16" stroke-dashoffset="16">
+                            <animate attributeName="stroke-dashoffset" dur="0.2s" fill="freeze" values="16;0"/>
+                        </path>
+                        <path d="M4.5 21.5v-13.5M19.5 21.5v-13.5" stroke-dasharray="16" stroke-dashoffset="16">
+                            <animate attributeName="stroke-dashoffset" begin="0.2s" dur="0.2s" fill="freeze"
+                                     values="16;0"/>
+                        </path>
+                        <path d="M2 10l10 -8l10 8" stroke-dasharray="28" stroke-dashoffset="28">
+                            <animate attributeName="stroke-dashoffset" begin="0.4s" dur="0.4s" fill="freeze"
+                                     values="28;0"/>
+                        </path>
+                        <path d="M9.5 21.5v-9h5v9" stroke-dasharray="24" stroke-dashoffset="24">
+                            <animate attributeName="stroke-dashoffset" begin="0.7s" dur="0.5s" fill="freeze"
+                                     values="24;0"/>
+                        </path>
+                    </g>
+                </svg>
+                <span th:text="${patient?.postalAddress ?: 'inconnu'}"></span>
+            </div>
+            <div class="patient-info">
+                <svg height="32" viewBox="0 0 24 24" width="32" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8 3c0.5 0 2.5 4.5 2.5 5c0 1 -1.5 2 -2 3c-0.5 1 0.5 2 1.5 3c0.39 0.39 2 2 3 1.5c1 -0.5 2 -2 3 -2c0.5 0 5 2 5 2.5c0 2 -1.5 3.5 -3 4c-1.5 0.5 -2.5 0.5 -4.5 0c-2 -0.5 -3.5 -1 -6 -3.5c-2.5 -2.5 -3 -4 -3.5 -6c-0.5 -2 -0.5 -3 0 -4.5c0.5 -1.5 2 -3 4 -3Z"
+                          fill="var(--content-accent)" fill-opacity="0"
+                          stroke="var(--content-secondary)" stroke-dasharray="64" stroke-dashoffset="64"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2">
+                        <animate attributeName="fill-opacity" begin="0.7s" dur="0.15s" fill="freeze" values="0;0.3"/>
+                        <animate attributeName="stroke-dashoffset" dur="1.2s" fill="freeze" values="64;0"/>
+                    </path>
+                </svg>
+                <span th:text="${patient?.phoneNumber ?: 'inconnu'}"></span>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

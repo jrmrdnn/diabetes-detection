@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head th:replace="~{fragments/head :: head( 'Ajouter un patient | Diabetes detection', 'Ajouter un patient' )}"></head>
+<body>
+<header class="header" th:replace="~{fragments/header :: header}"></header>
+<div class="message-success" th:if="${successMessage}"><p th:text="${successMessage}"></p></div>
+<div class="message-error" th:if="${errorMessage}"><p th:text="${errorMessage}"></p></div>
+<main>
+    <div class="app-content">
+        <div class="patient-title">
+            <svg height="40" th:onclick="|window.location.href='@{/app}'|" viewBox="0 0 24 24" width="40"
+                 xmlns="http://www.w3.org/2000/svg">
+                <g fill="var(--content-secondary)" stroke="var(--content-secondary)" stroke-linecap="round"
+                   stroke-linejoin="round" stroke-width="2">
+                    <path d="M19 12h-13.5" stroke-dasharray="16" stroke-dashoffset="16">
+                        <animate attributeName="stroke-dashoffset" dur="0.4s" fill="freeze" values="16;0"/>
+                    </path>
+                    <path d="M5 12l5 5M5 12l5 -5" stroke-dasharray="10" stroke-dashoffset="10">
+                        <animate attributeName="stroke-dashoffset" begin="0.4s" dur="0.4s" fill="freeze" values="10;0"/>
+                    </path>
+                </g>
+            </svg>
+            <h1>Ajouter un patient</h1></div>
+        <form class="patient-content" method="post" th:action="@{/patient/add}" th:object="${patientDto}">
+            <div class="patient-control">
+                <label class="label">Genre du patient :</label>
+                <div class="patient-gender">
+                    <div th:each="gender : ${genders}">
+                        <input th:field="*{gender}"
+                               th:id="${gender}"
+                               th:value="${gender}"
+                               type="radio"/>
+                        <label th:for="${gender}" th:text="${#strings.toUpperCase(gender) == 'M' ? 'Masculin' : (#strings.toUpperCase(gender) == 'F' ? 'Féminin' : 'Non renseigné')}"></label>
+                    </div>
+                </div>
+                <span class="span" th:errors="*{gender}" th:if="${#fields.hasErrors('gender')}"></span>
+            </div>
+            <div class="patient-flex">
+                <div class="patient-control">
+                    <label class="label" for="firstName">Prénom du patient :</label>
+                    <input class="input"
+                           id="firstName"
+                           maxlength="50"
+                           minlength="2"
+                           name="firstName"
+                           placeholder="Prénom"
+                           required th:field="*{firstName}"
+                           title="Le prénom du patient doit contenir entre 2 et 50 caractères." type="text"/>
+                    <span class="span" th:errors="*{firstName}"
+                          th:if="${#fields.hasErrors('firstName')}"></span>
+                </div>
+                <div class="patient-control">
+                    <label class="label" for="lastName">Nom de famille du patient :</label>
+                    <input class="input"
+                           id="lastName"
+                           maxlength="50"
+                           minlength="2"
+                           placeholder="Nom de famille"
+                           required
+                           th:field="*{lastName}"
+                           title="Le nom de famille du patient doit contenir entre 2 et 50 caractères."
+                           type="text"/>
+                    <span class="span" th:errors="*{lastName}" th:if="${#fields.hasErrors('lastName')}"></span>
+                </div>
+            </div>
+            <div class="patient-flex">
+                <div class="patient-control">
+                    <label class="label" for="birthDate">Date de naissance du patient :</label>
+                    <input class="input" id="birthDate" name="birthDate" required th:field="*{birthDate}" type="date"/>
+                    <span class="span" th:errors="*{birthDate}" th:if="${#fields.hasErrors('birthDate')}"></span>
+                </div>
+                <div class="patient-control">
+                    <label class="label" for="phoneNumber">Numéro de téléphone du patient :</label>
+                    <input class="input"
+                           id="phoneNumber"
+                           name="phoneNumber"
+                           pattern="^0[6-7](\s\d{2}){4}$"
+                           placeholder="Numéro de téléphone"
+                           th:field="*{phoneNumber}"
+                           title="Le numéro de téléphone du patient doit être au format 0X XX XX XX."
+                           type="tel"/>
+                    <span class="span" th:errors="*{phoneNumber}" th:if="${#fields.hasErrors('phoneNumber')}"></span>
+                </div>
+            </div>
+            <div class="patient-control">
+                <label class="label" for="postalAddress">Adresse postale du patient :</label>
+                <input class="input"
+                       id="postalAddress"
+                       maxlength="255"
+                       minlength="2"
+                       placeholder="Adresse postale"
+                       th:field="*{postalAddress}"
+                       title="L'adresse postale du patient doit contenir entre 2 et 255 caractères."
+                       type="text"/>
+                <span class="span" th:errors="*{postalAddress}" th:if="${#fields.hasErrors('postalAddress')}"></span>
+            </div>
+            <button class="btn" type="submit">Ajouter le patient</button>
+        </form>
+    </div>
+</main>
+</body>
+</html>
