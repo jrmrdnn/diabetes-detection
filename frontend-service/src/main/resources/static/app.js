@@ -400,6 +400,184 @@ class Search extends HTMLElement {
     }
 }
 
+class Textarea extends HTMLElement {
+    constructor() {
+        super(...arguments);
+        this.onInput = (event) => {
+            const target = event.target;
+            this.autoResizeTextarea(target);
+        };
+    }
+    connectedCallback() {
+        this.addListeners();
+    }
+    addListeners() {
+        var _a;
+        (_a = this.querySelector("textarea")) === null || _a === void 0 ? void 0 : _a.addEventListener("input", this.onInput);
+    }
+    removeListeners() {
+        var _a;
+        (_a = this.querySelector("textarea")) === null || _a === void 0 ? void 0 : _a.removeEventListener("input", this.onInput);
+    }
+    autoResizeTextarea(textarea) {
+        textarea.style.height = "auto";
+        textarea.style.height = textarea.scrollHeight + "px";
+    }
+}
+
+class Timeline extends HTMLElement {
+    constructor() {
+        super(...arguments);
+        this.editing = false;
+        this.open = false;
+        this.csrf = null;
+        this.patientId = null;
+        this.noteId = null;
+        this.body = null;
+        this.form = null;
+        this.onBodyClick = (event) => {
+            if (this.open && this.editing)
+                return;
+            const target = event.target;
+            if (target.closest(".timeline-edit")) {
+                event.stopPropagation();
+                this.startEditing();
+                return;
+            }
+            if (target.closest(".timeline")) {
+                event.stopPropagation();
+                this.toggleOpen();
+                return;
+            }
+            this.closeAllNotes();
+        };
+        this.onBodyClickOutside = (event) => {
+            const target = event.target;
+            if (target.closest(".timeline"))
+                return;
+            if (this.editing)
+                this.removeForm();
+            this.editing = false;
+            this.closeAllNotes();
+        };
+    }
+    static get observedAttributes() {
+        return ["open"];
+    }
+    attributeChangedCallback(name, _oldValue, newValue) {
+        this.removeForm();
+        if (name === "open") {
+            this.open = newValue === "true";
+            this.updateBodyState();
+        }
+    }
+    connectedCallback() {
+        this.open = this.getAttribute("open") === "true";
+        this.csrf = this.getAttribute("csrf");
+        this.patientId = this.getAttribute("patientId");
+        this.noteId = this.getAttribute("noteId");
+        this.body = this.querySelector(".timeline-body");
+        this.updateBodyState();
+        this.addListeners();
+    }
+    disconnectedCallback() {
+        this.removeListeners();
+    }
+    addListeners() {
+        this.addEventListener("click", this.onBodyClick);
+        document.addEventListener("click", this.onBodyClickOutside);
+        window.addEventListener("resize", this.closeAllNotes);
+    }
+    removeListeners() {
+        this.removeEventListener("click", this.onBodyClick);
+        document.removeEventListener("click", this.onBodyClickOutside);
+        window.removeEventListener("resize", this.closeAllNotes);
+    }
+    startEditing() {
+        var _a, _b;
+        this.closeAllNotes();
+        const note = this.querySelector(".timeline-body p");
+        this.open = true;
+        this.editing = true;
+        this.setAttribute("open", "true");
+        // Création du formulaire
+        this.form = document.createElement("form");
+        this.form.id = "form-timeline-edit";
+        this.form.method = "post";
+        this.form.action = `/note/${this.noteId}`;
+        // Champ pour méthode PUT
+        const inputMethod = document.createElement("input");
+        inputMethod.type = "hidden";
+        inputMethod.name = "_method";
+        inputMethod.value = "PUT";
+        // Champ patientId
+        const inputPatient = document.createElement("input");
+        inputPatient.type = "hidden";
+        inputPatient.name = "patient";
+        inputPatient.value = (_a = this.patientId) !== null && _a !== void 0 ? _a : "";
+        // Champ CSRF
+        const inputCsrf = document.createElement("input");
+        inputCsrf.type = "hidden";
+        inputCsrf.name = "_csrf";
+        inputCsrf.value = (_b = this.csrf) !== null && _b !== void 0 ? _b : "";
+        // Zone de texte pour édition
+        const textarea = document.createElement("textarea");
+        textarea.name = "note";
+        textarea.className = "timeline-editing";
+        textarea.value = (note === null || note === void 0 ? void 0 : note.textContent) || "";
+        textarea.minLength = 10;
+        textarea.maxLength = 1000;
+        textarea.required = true;
+        // Bouton de soumission
+        const button = document.createElement("button");
+        button.type = "submit";
+        button.className = "btn positive";
+        button.textContent = "Sauvegarder";
+        // Ajout des éléments au formulaire
+        this.form.append(inputMethod, inputPatient, inputCsrf, textarea, button);
+        // Remplacement du contenu
+        note === null || note === void 0 ? void 0 : note.replaceWith(this.form);
+        textarea.focus();
+        this.autoResizeTextarea(textarea);
+        textarea.addEventListener("input", () => this.autoResizeTextarea(textarea));
+    }
+    autoResizeTextarea(textarea) {
+        textarea.style.height = "auto";
+        textarea.style.height = textarea.scrollHeight + "px";
+    }
+    toggleOpen() {
+        this.open = !this.open;
+        this.setAttribute("open", String(this.open));
+        this.closeOtherNotes();
+    }
+    closeOtherNotes() {
+        document
+            .querySelectorAll("timeline-component")
+            .forEach((timeline) => timeline !== this &&
+            timeline.open &&
+            timeline.setAttribute("open", "false"));
+    }
+    closeAllNotes() {
+        document
+            .querySelectorAll("timeline-component")
+            .forEach((timeline) => timeline.setAttribute("open", "false"));
+    }
+    updateBodyState() {
+        if (this.body)
+            this.body.classList.toggle("active", this.open);
+    }
+    removeForm() {
+        const form = this.querySelector("#form-timeline-edit");
+        if (form) {
+            const textarea = form.querySelector("textarea");
+            const text = (textarea === null || textarea === void 0 ? void 0 : textarea.value) || "";
+            const p = document.createElement("p");
+            p.textContent = text;
+            form.replaceWith(p);
+        }
+    }
+}
+
 class Pagination extends HTMLElement {
     constructor() {
         super(...arguments);
@@ -496,4 +674,6 @@ class Pagination extends HTMLElement {
 customElements.define("user-component", User);
 customElements.define("sort-component", Sort);
 customElements.define("search-component", Search);
+customElements.define("textarea-component", Textarea);
+customElements.define("timeline-component", Timeline);
 customElements.define("pagination-component", Pagination);

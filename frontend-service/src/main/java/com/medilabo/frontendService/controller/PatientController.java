@@ -1,8 +1,10 @@
 package com.medilabo.frontendService.controller;
 
 import com.medilabo.frontendService.dto.Gender;
+import com.medilabo.frontendService.dto.NoteDto;
 import com.medilabo.frontendService.dto.PatientDto;
 import com.medilabo.frontendService.dto.PatientsDto;
+import com.medilabo.frontendService.feign.NoteFeignClient;
 import com.medilabo.frontendService.feign.PatientFeignClient;
 import com.medilabo.frontendService.service.PatientService;
 import feign.FeignException;
@@ -23,17 +25,24 @@ import java.util.UUID;
 public class PatientController {
 
     private final PatientFeignClient patientFeignClient;
+    private final NoteFeignClient noteFeignClient;
     private final PatientService patientService;
 
     @Value("${baseUrl}")
     private String baseUrl;
 
     @GetMapping("/{id}")
-    public String showPatient(@PathVariable UUID id, Model model) {
+    public String showPatient(
+            @PathVariable UUID id,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "5") int size,
+            Model model) {
         try {
             PatientDto patient = patientFeignClient.getPatientById(id);
             model.addAttribute("patient", patient);
             model.addAttribute("age", patientService.calculateAge(patient.getBirthDate()));
+            model.addAttribute("notes", noteFeignClient.getNotesByPatient(id.toString(), page - 1, size));
+            model.addAttribute("noteDto", new NoteDto());
         } catch (FeignException e) {
             model.addAttribute("errorMessage", "Patient introuvable pour l’ID : " + id);
             return "patient";

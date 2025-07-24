@@ -1,0 +1,17 @@
+.container-textarea {
+  position: relative;
+  margin-top: 20px;
+  padding: 0 20px;
+
+  textarea {
+    width: 100%;
+    padding: 15px 20px;
+    border: 1px solid var(--content-tertiary);
+    border-radius: var(--border-radius);
+    resize: none;
+  }
+
+  button {
+    margin-top: 10px;
+  }
+}

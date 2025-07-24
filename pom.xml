@@ -17,6 +17,7 @@
         <module>frontend-service</module>
         <module>patient-service</module>
         <module>auth-service</module>
+        <module>note-service</module>
     </modules>
 
     <properties>

@@ -121,6 +121,72 @@
                 </svg>
                 <span th:text="${patient?.phoneNumber ?: 'inconnu'}"></span>
             </div>
+            <div class="patient-subtitle">
+                <h2>Notes du patient</h2>
+            </div>
+            <div class="container-textarea">
+                <textarea-component>
+                    <form method="post" th:action="@{/note}" th:object="${noteDto}">
+                        <input name="patient"
+                               th:value="${patient?.id}"
+                               type="hidden"/>
+                        <textarea
+                                autofocus maxlength="1000" minlength="10"
+                                name="note"
+                                placeholder="Écrivez votre note ici..." required th:field="*{note}">
+                        </textarea>
+                        <span class="span"
+                              th:errors="*{note}"
+                              th:if="${#fields.hasErrors('note')}">
+                        </span>
+                        <button class="btn" type="submit">Ajouter</button>
+                    </form>
+                </textarea-component>
+            </div>
+            <div class="container-timeline">
+                <timeline-component open="false" th:csrf="${_csrf.token}" th:each="note : ${notes?.data}"
+                                    th:noteId="${note.id}" th:patientId="${patient.id}">
+                    <div class="timeline">
+                        <div class="timeline-container">
+                            <div class="timeline-icon"></div>
+                            <div class="timeline-body">
+                                <span th:text="${#temporals.format(note.createdAt, 'EE dd MMM yy')}"></span>
+                                <p th:text="${note.note}"></p>
+                                <div class="timeline-actions">
+                                    <div class="timeline-edit">
+                                        <svg height="15" viewBox="0 0 512 512" width="15"
+                                             xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0l-30.1 30l97.9 97.9l30.1-30.1c21.9-21.9 21.9-57.3 0-79.2zm-299.2 220c-6.1 6.1-10.8 13.6-13.5 21.9l-29.6 88.8c-2.9 8.6-.6 18.1 5.8 24.6s15.9 8.7 24.6 5.8l88.8-29.6c8.2-2.7 15.7-7.4 21.9-13.5l167.3-167.4l-98-98zM96 64c-53 0-96 43-96 96v256c0 53 43 96 96 96h256c53 0 96-43 96-96v-96c0-17.7-14.3-32-32-32s-32 14.3-32 32v96c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32 32-32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32z"
+                                                  fill="currentColor"/>
+                                        </svg>
+                                    </div>
+                                    <form class="timeline-delete" method="post"
+                                          th:action="@{/note/{id}(id=${note.id}, patientId=${patient.id})}">
+                                        <input name="_method" type="hidden" value="DELETE"/>
+                                        <button class="btn-hidden" type="submit">
+                                            <svg height="15"
+                                                 onclick="if(confirm('Êtes-vous sûr de vouloir supprimer cette note ?')) this.parentNode.submit();"
+                                                 viewBox="0 0 448 512"
+                                                 width="15"
+                                                 xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0h120.4c12.1 0 23.2 6.8 28.6 17.7L320 32h96c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 96 0 81.7 0 64s14.3-32 32-32h96zM32 128h384v320c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64zm96 64c-8.8 0-16 7.2-16 16v224c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16m96 0c-8.8 0-16 7.2-16 16v224c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16m96 0c-8.8 0-16 7.2-16 16v224c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16"
+                                                      fill="currentColor"/>
+                                            </svg>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </timeline-component>
+            </div>
+            <pagination-component
+                    class="app-pagination"
+                    th:current-page="${notes?.currentPage !=null ? notes.currentPage + 1 : 1}"
+                    th:page-size="${notes?.pageSize !=null ? notes.pageSize : 5}"
+                    th:total-elements="${notes?.totalElements !=null ? notes.totalElements : 0}"
+                    th:total-pages="${notes?.totalPages !=null ? notes.totalPages : 1}">
+            </pagination-component>
         </div>
     </div>
 </main>

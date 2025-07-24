@@ -1,0 +1,179 @@
+.container-timeline {
+  width: 100%;
+  padding: 30px;
+  overflow: hidden;
+}
+
+.container-timeline timeline-note:last-child .timeline {
+  margin-bottom: 0;
+}
+
+.timeline {
+  position: relative;
+  padding-left: 60px;
+  margin-bottom: 40px;
+
+  &::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 20px;
+    bottom: 0;
+    width: 4px;
+    background-color: var(--content-accent);
+  }
+
+  &:last-child {
+    &::before {
+      height: 100vh;
+    }
+  }
+}
+
+.timeline-container {
+  position: relative;
+}
+
+.timeline-icon {
+  position: absolute;
+  left: -72.5px;
+  top: 15px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: var(--background-Light-accent);
+  border: solid 4px var(--content-accent);
+}
+
+.timeline-body {
+  position: relative;
+  height: auto;
+  max-height: 90px;
+  padding: 10px 20px 15px;
+  text-align: left;
+  color: var(--background-primary);
+  border: 1px solid var(--content-disabled);
+  border-radius: var(--border-radius);
+  background-color: var(--background-Light-accent);
+  box-shadow: var(--box-shadow-card);
+  cursor: pointer;
+  transition: max-height 0.3s ease, background-color 0.3s ease,
+    box-shadow 0.3s ease;
+
+  &::before {
+    content: "";
+    position: absolute;
+    left: -10px;
+    top: 20px;
+    width: 20px;
+    height: 20px;
+    transform: rotate(45deg);
+    border-left: 1px solid var(--content-disabled);
+    border-bottom: 1px solid var(--content-disabled);
+    border-radius: 0 0 0 2px;
+    background-color: inherit;
+    background: inherit;
+  }
+
+  p {
+    margin-top: 5px;
+    font-size: 16px;
+    line-height: 1.4;
+    letter-spacing: 1.1px;
+    color: var(--content-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.3s ease;
+  }
+
+  span {
+    padding: 3px 5px;
+    font-size: 11px;
+    font-weight: 100;
+    letter-spacing: 0.5px;
+    color: var(--content-secondary);
+    transition: color 0.3s ease;
+  }
+
+  &:hover {
+    background-color: var(--content-accent);
+    background: var(--content-accent);
+
+    p {
+      color: var(--background-primary);
+    }
+
+    span {
+      color: var(--background-secondary);
+    }
+
+    .timeline-actions {
+      opacity: 1;
+      right: 10px;
+      top: 10px;
+    }
+
+    .timeline-edit {
+      transform: rotate(0deg);
+    }
+
+    .timeline-delete {
+      transform: rotate(0deg);
+    }
+  }
+
+  &.active {
+    max-height: 500px;
+
+    p {
+      white-space: normal;
+      overflow: visible;
+      text-overflow: clip;
+    }
+  }
+}
+
+.timeline-actions {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  gap: 10px;
+  opacity: 0;
+  transition: opacity 0.3s ease, right 0.5s ease, top 0.5s ease;
+}
+
+.timeline-edit,
+.timeline-delete {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  transform: rotate(180deg);
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.5s ease;
+
+  path {
+    fill: var(--background-primary);
+  }
+}
+
+.timeline-edit {
+  background-color: var(--content-accent-hover);
+}
+
+.timeline-delete {
+  background-color: var(--content-negative-hover);
+}
+
+.timeline-editing {
+  margin-top: 20px;
+  color: var(--content-primary) !important;
+  background-color: var(--background-primary);
+  //border: 1px solid var(--content-accent);
+  padding: 20px;
+  cursor: text;
+}

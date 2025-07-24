@@ -8,13 +8,8 @@ import java.util.UUID;
 
 @Getter
 @Setter
-public class PatientsDto {
-
+public class PatientsDto extends PaginatedDto {
     private List<Patient> data;
-    private long totalElements;
-    private int totalPages;
-    private int currentPage;
-    private int pageSize;
 
     @Getter
     @Setter

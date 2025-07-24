@@ -39,3 +39,13 @@ main {
 li {
   list-style: none;
 }
+
+textarea {
+  width: 100%;
+  resize: none;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
