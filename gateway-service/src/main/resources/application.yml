@@ -30,6 +30,11 @@ spring:
               predicates:
                 - Path=/api/notes/**
 
+            - id: assessment-service
+              uri: http://localhost:8085
+              predicates:
+                - Path=/api/assessment/**
+
 jwt:
   public-key-path: ${JWT_PUBLIC_KEY_PATH:./secrets/jwt_public.pem}
 

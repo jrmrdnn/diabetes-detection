@@ -39,3 +39,12 @@
     transform: translateY(-20px);
   }
 }
+
+@keyframes drop-move {
+  from {
+    left: 0;
+  }
+  to {
+    left: var(--drop-target, 0);
+  }
+}

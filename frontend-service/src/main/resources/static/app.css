@@ -747,6 +747,99 @@ body:has(.search-container.show) .header {
   box-shadow: 0 0 0 2px var(--content-accent-light);
 }
 
+.patient-gauge-container {
+  align-items: center;
+  display: flex;
+  gap: 10px;
+  position: relative;
+}
+.patient-gauge-container .gauge {
+  border-radius: var(--border-radius);
+  display: flex;
+  height: 30px;
+  overflow: hidden;
+  width: 300px;
+}
+.patient-gauge-container .gauge-section {
+  height: 100%;
+}
+.patient-gauge-container .gauge-section.earlyonset {
+  background-color: #ff0000;
+  width: 25%;
+}
+.patient-gauge-container .gauge-section.indanger {
+  background-color: #ffc300;
+  width: 25%;
+}
+.patient-gauge-container .gauge-section.borderline {
+  background-color: #daf7a6;
+  width: 25%;
+}
+.patient-gauge-container .gauge-section.none {
+  background-color: #58d68d;
+  width: 25%;
+}
+.patient-gauge-container .drop {
+  animation: drop-move 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  border-bottom: 10px solid transparent;
+  border-left: 20px solid #333;
+  border-top: 10px solid transparent;
+  bottom: -5px;
+  height: 0;
+  left: 0;
+  position: absolute;
+  transform: rotate(-90deg);
+  transition: left 0.3s ease, background-color 0.3s ease;
+  width: 0;
+}
+.patient-gauge-container .drop.earlyonset {
+  --drop-target: calc(100% / 4 * 3 + 100% / 4 / 2 - 10px);
+  background-color: transparent;
+}
+.patient-gauge-container .drop.indanger {
+  --drop-target: calc(100% / 4 * 2 + 100% / 4 / 2 - 10px);
+  background-color: transparent;
+}
+.patient-gauge-container .drop.borderline {
+  --drop-target: calc(100% / 4 + 100% / 4 / 2 - 10px);
+  background-color: transparent;
+}
+.patient-gauge-container .drop.none {
+  --drop-target: calc(100% / 4 / 2 - 10px);
+  background-color: transparent;
+}
+
+.patient-gauge-labels {
+  display: block;
+  height: 18px;
+  margin-top: 10px;
+  position: relative;
+  width: 300px;
+}
+.patient-gauge-labels .gauge-label {
+  font-size: 11px;
+  font-weight: 500;
+  position: absolute;
+  top: 0;
+  white-space: nowrap;
+}
+.patient-gauge-labels .gauge-label:nth-child(1) {
+  left: 12.5%;
+  transform: translateX(-50%);
+}
+.patient-gauge-labels .gauge-label:nth-child(2) {
+  left: 37.5%;
+  transform: translateX(-50%);
+}
+.patient-gauge-labels .gauge-label:nth-child(3) {
+  left: 62.5%;
+  transform: translateX(-50%);
+}
+.patient-gauge-labels .gauge-label:nth-child(4) {
+  left: 87.5%;
+  transform: translateX(-50%);
+}
+
 .btn {
   align-items: center;
   background-color: var(--content-accent);
@@ -1116,6 +1209,14 @@ body:has(.search-container.show) .header {
     transform: translateY(-20px);
   }
 }
+@keyframes drop-move {
+  from {
+    left: 0;
+  }
+  to {
+    left: var(--drop-target, 0);
+  }
+}
 @media (max-width: 1023px){
   main {
     padding: 15px;
@@ -1225,6 +1326,16 @@ body:has(.search-container.show) .header {
     font-size: 17px;
     gap: 30px;
     margin-top: 8.33px;
+  }
+  .patient-gauge-container .gauge {
+    height: 27.5px;
+    width: 275px;
+  }
+  .patient-gauge-labels .gauge-label {
+    font-size: 10px;
+  }
+  .patient-gauge-labels {
+    width: 275px;
   }
   .btn {
     font-size: 17px;
@@ -1377,6 +1488,16 @@ body:has(.search-container.show) .header {
     gap: 25px;
     margin-top: 6.66px;
   }
+  .patient-gauge-container .gauge {
+    height: 25px;
+    width: 250px;
+  }
+  .patient-gauge-labels .gauge-label {
+    font-size: 9px;
+  }
+  .patient-gauge-labels {
+    width: 250px;
+  }
   .btn {
     font-size: 16px;
     padding: 8px 13px;
@@ -1499,6 +1620,16 @@ body:has(.search-container.show) .header {
     font-size: 15px;
     gap: 20px;
     margin-top: 5px;
+  }
+  .patient-gauge-container .gauge {
+    height: 20px;
+    width: 200px;
+  }
+  .patient-gauge-labels .gauge-label {
+    font-size: 8px;
+  }
+  .patient-gauge-labels {
+    width: 200px;
   }
   .btn {
     font-size: 15px;

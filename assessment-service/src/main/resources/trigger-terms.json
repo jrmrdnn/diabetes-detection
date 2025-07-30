@@ -1,0 +1,94 @@
+{
+  "hémoglobine": [
+    "hémoglobine a1c"
+  ],
+  "microalbumine": [
+    "microalbumine"
+  ],
+  "taille": [
+    "taille"
+  ],
+  "poids": [
+    "poids"
+  ],
+  "fumeur": [
+    "fume",
+    "fumes",
+    "fumer",
+    "fument",
+    "fumé",
+    "fumés",
+    "fumée",
+    "fumées",
+    "fumeur",
+    "fumeurs",
+    "fumeuse",
+    "fumeuses",
+    "fumai",
+    "fumaient",
+    "fumais",
+    "fumait",
+    "fumâmes",
+    "fumant",
+    "fumante",
+    "fumantes",
+    "fumants",
+    "fumas",
+    "fumâtes",
+    "fumera",
+    "fumerai",
+    "fumeraient",
+    "fumerais",
+    "fumerait",
+    "fumette",
+    "fumèrent",
+    "tabac",
+    "cigare",
+    "cigarette"
+  ],
+  "anormal": [
+    "anormal",
+    "anormale",
+    "anormales",
+    "anormaux",
+    "inhabituel",
+    "inhabituelle",
+    "inhabituelles",
+    "inhabituels",
+    "irrégulier",
+    "irréguliers",
+    "irrégulière",
+    "irrégulières"
+  ],
+  "cholesterol": [
+    "cholestérol",
+    "cholestérols"
+  ],
+  "vertige": [
+    "vertige",
+    "vertiges",
+    "étourdi",
+    "étourdis",
+    "étourdie",
+    "étourdies",
+    "étourdissement",
+    "étourdissements"
+  ],
+  "rechute": [
+    "rechute",
+    "rechutes",
+    "récidive",
+    "récidives",
+    "recrudescence",
+    "recrudescences",
+    "recrudescente",
+    "recrudescents"
+    ],
+  "réaction" : [
+    "réaction",
+    "réactions"
+  ],
+  "anticorps" : [
+    "anticorps"
+  ]
+}

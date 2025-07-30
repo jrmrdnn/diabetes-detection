@@ -121,6 +121,42 @@
                 </svg>
                 <span th:text="${patient?.phoneNumber ?: 'inconnu'}"></span>
             </div>
+            <div class="patient-info">
+                <svg height="32" viewBox="0 0 576 512" width="32" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M142.4 21.9c5.6 16.8-3.5 34.9-20.2 40.5L96 71.1V192c0 53 43 96 96 96s96-43 96-96V71.1l-26.1-8.7c-16.8-5.6-25.8-23.7-20.2-40.5s23.7-25.8 40.5-20.2l26.1 8.7c26.1 8.7 43.7 33.1 43.7 60.7V192c0 77.2-54.6 141.6-127.3 156.7C231 404.6 278.4 448 336 448c61.9 0 112-50.1 112-112v-70.7c-28.3-12.3-48-40.5-48-73.3c0-44.2 35.8-80 80-80s80 35.8 80 80c0 32.8-19.7 61-48 73.3V336c0 97.2-78.8 176-176 176c-92.9 0-168.9-71.9-175.5-163.1C87.2 334.2 32 269.6 32 192V71.1c0-27.5 17.6-52 43.8-60.7l26.1-8.7c16.8-5.6 34.9 3.5 40.5 20.2M480 224a32 32 0 1 0 0-64a32 32 0 1 0 0 64" fill="var(--content-accent)" fill-opacity="0"
+                          stroke="var(--content-secondary)" stroke-dasharray="3200" stroke-dashoffset="3200" stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="35">
+                        <animate attributeName="stroke-dashoffset" dur="1.2s" fill="freeze" values="3200;0"/>
+                        <animate attributeName="fill-opacity" begin="0.6s" dur="0.6s" fill="freeze" values="0;0.3"/>
+                    </path>
+                </svg>
+                <span th:text="${assessment?.getTriggerTermsCount() ?: '0'}"></span>
+                <div>
+                    <div class="patient-gauge-container"
+                         th:switch="${#strings.toUpperCase(assessment?.getRiskLevel())}">
+                        <div class="drop none" th:case="NONE"></div>
+                        <div class="drop borderline" th:case="BORDERLINE"></div>
+                        <div class="drop indanger" th:case="IN_DANGER"></div>
+                        <div class="drop earlyonset" th:case="EARLY_ONSET"></div>
+                        <div class="drop none" th:case="*"></div>
+                        <div class="gauge">
+                            <div class="gauge-section none"></div>
+                            <div class="gauge-section borderline"></div>
+                            <div class="gauge-section indanger"></div>
+                            <div class="gauge-section earlyonset"></div>
+                        </div>
+                    </div>
+                    <div class="patient-gauge-labels">
+                        <div class="gauge-label">Aucun risque</div>
+                        <div class="gauge-label">Risque limité</div>
+                        <div class="gauge-label">Danger</div>
+                        <div class="gauge-label">Apparition précoce</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
             <div class="patient-subtitle">
                 <h2>Notes du patient</h2>
             </div>

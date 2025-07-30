@@ -4,6 +4,7 @@ import com.medilabo.frontendService.dto.Gender;
 import com.medilabo.frontendService.dto.NoteDto;
 import com.medilabo.frontendService.dto.PatientDto;
 import com.medilabo.frontendService.dto.PatientsDto;
+import com.medilabo.frontendService.feign.AssessmentFeignClient;
 import com.medilabo.frontendService.feign.NoteFeignClient;
 import com.medilabo.frontendService.feign.PatientFeignClient;
 import com.medilabo.frontendService.service.PatientService;
@@ -24,6 +25,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PatientController {
 
+    private final AssessmentFeignClient assessmentFeignClient;
     private final PatientFeignClient patientFeignClient;
     private final NoteFeignClient noteFeignClient;
     private final PatientService patientService;
@@ -43,6 +45,7 @@ public class PatientController {
             model.addAttribute("age", patientService.calculateAge(patient.getBirthDate()));
             model.addAttribute("notes", noteFeignClient.getNotesByPatient(id.toString(), page - 1, size));
             model.addAttribute("noteDto", new NoteDto());
+            model.addAttribute("assessment", assessmentFeignClient.assess(id));
         } catch (FeignException e) {
             model.addAttribute("errorMessage", "Patient introuvable pour l’ID : " + id);
             return "patient";

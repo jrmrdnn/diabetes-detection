@@ -1,0 +1,9 @@
+server:
+  port: ${ASSESSMENT_SERVICE_PORT:8085}
+
+spring:
+  application:
+    name: assessment-service
+
+cookie:
+  auth-name: ${COOKIE_AUTH_NAME:authToken}

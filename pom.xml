@@ -18,6 +18,7 @@
         <module>patient-service</module>
         <module>auth-service</module>
         <module>note-service</module>
+        <module>assessment-service</module>
     </modules>
 
     <properties>

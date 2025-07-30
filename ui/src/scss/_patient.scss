@@ -298,3 +298,148 @@
     font-size: 15px;
   }
 }
+
+.patient-gauge-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  .gauge {
+    display: flex;
+    height: 30px;
+    width: 300px;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+
+    @include media-max(laptop) {
+      width: 275px;
+      height: 27.5px;
+    }
+
+    @include media-max(tablet) {
+      width: 250px;
+      height: 25px;
+    }
+
+    @include media-max(mobile_l) {
+      width: 200px;
+      height: 20px;
+    }
+  }
+
+  .gauge-section {
+    height: 100%;
+
+    &.earlyonset {
+      background-color: #ff0000;
+      width: 25%;
+    }
+
+    &.indanger {
+      background-color: #ffc300;
+      width: 25%;
+    }
+
+    &.borderline {
+      background-color: #daf7a6;
+      width: 25%;
+    }
+
+    &.none {
+      background-color: #58d68d;
+      width: 25%;
+    }
+  }
+
+  .drop {
+    position: absolute;
+    left: 0;
+    bottom: -5px;
+    width: 0;
+    height: 0;
+    border-left: 20px solid #333;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    transform: rotate(-90deg);
+    transition: left 0.3s ease, background-color 0.3s ease;
+    animation: drop-move 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+
+    &.earlyonset {
+      --drop-target: calc(100% / 4 * 3 + 100% / 4 / 2 - 10px);
+      background-color: transparent;
+    }
+
+    &.indanger {
+      --drop-target: calc(100% / 4 * 2 + 100% / 4 / 2 - 10px);
+      background-color: transparent;
+    }
+
+    &.borderline {
+      --drop-target: calc(100% / 4 + 100% / 4 / 2 - 10px);
+      background-color: transparent;
+    }
+
+    &.none {
+      --drop-target: calc(100% / 4 / 2 - 10px);
+      background-color: transparent;
+    }
+  }
+}
+
+.patient-gauge-labels {
+  position: relative;
+  width: 300px;
+  height: 18px;
+  margin-top: 10px;
+  display: block;
+
+  .gauge-label {
+    position: absolute;
+    top: 0;
+    font-size: 11px;
+    font-weight: 500;
+    white-space: nowrap;
+
+    &:nth-child(1) {
+      left: 12.5%;
+      transform: translateX(-50%);
+    }
+    &:nth-child(2) {
+      left: 37.5%;
+      transform: translateX(-50%);
+    }
+    &:nth-child(3) {
+      left: 62.5%;
+      transform: translateX(-50%);
+    }
+    &:nth-child(4) {
+      left: 87.5%;
+      transform: translateX(-50%);
+    }
+
+    @include media-max(laptop) {
+      font-size: 10px;
+    }
+
+    @include media-max(tablet) {
+      font-size: 9px;
+    }
+
+    @include media-max(mobile_l) {
+      font-size: 8px;
+    }
+  }
+
+  @include media-max(laptop) {
+    width: 275px;
+  }
+
+  @include media-max(tablet) {
+    width: 250px;
+  }
+
+  @include media-max(mobile_l) {
+    width: 200px;
+  }
+}
