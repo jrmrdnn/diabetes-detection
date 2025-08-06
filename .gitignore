@@ -1,5 +1,6 @@
 logs
 secrets
+ui/coverage
 **/target
 **/node_modules
 package-lock.json
