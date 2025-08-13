@@ -28,35 +28,43 @@
             </svg>
             <h1>Modification du patient</h1>
         </div>
-        <form class="patient-content" method="post" th:action="@{/patient/edit/{id}(id=${patient.id})}"
+        <form class="patient-content" method="post" th:action="@{/patient/edit/{id}(id=${patientId})}"
               th:object="${patientDto}">
             <input name="_method" type="hidden" value="PUT"/>
             <div class="patient-flex">
                 <div class="patient-control">
                     <label class="label" for="firstName">Prénom du patient :</label>
-                    <input class="input" disabled id="firstName" th:value="${patient.firstName}"/>
+                    <input name="firstName" th:field="*{firstName}" type="hidden"/>
+                    <input class="input" disabled id="firstName" th:value="*{firstName}"/>
+                    <span class="span" th:errors="*{firstName}" th:if="${#fields.hasErrors('firstName')}"></span>
                 </div>
                 <div class="patient-control">
                     <label class="label" for="lastName">Nom de famille du patient :</label>
-                    <input class="input" disabled id="lastName" th:value="${patient.lastName}"/>
+                    <input name="lastName" th:field="*{lastName}" type="hidden"/>
+                    <input class="input" disabled id="lastName" th:value="*{lastName}"/>
+                    <span class="span" th:errors="*{lastName}" th:if="${#fields.hasErrors('lastName')}"></span>
                 </div>
             </div>
             <div class="patient-flex">
                 <div class="patient-control">
                     <label class="label" for="genre">Genre du patient :</label>
+                    <input th:field="*{gender}" type="hidden"/>
                     <input class="input" disabled id="genre"
-                           th:value="${#strings.toUpperCase(patient.gender) == 'M' ? 'Masculin' : (#strings.toUpperCase(patient.gender) == 'F' ? 'Féminin' : 'Non renseigné')}"/>
+                           th:value="${#strings.toUpperCase(patientDto.gender) == 'M' ? 'Masculin' : (#strings.toUpperCase(patientDto.gender) == 'F' ? 'Féminin' : 'Non renseigné')}"/>
+                    <span class="span" th:errors="*{gender}" th:if="${#fields.hasErrors('gender')}"></span>
                 </div>
                 <div class="patient-control">
                     <label class="label" for="birthDate">Date de naissance du patient :</label>
+                    <input name="birthDate" th:field="*{birthDate}" type="hidden"/>
                     <input class="input" disabled id="birthDate"
-                           th:value="${#temporals.format(patient.birthDate, 'EEEE dd MMMM yyyy')}"/>
+                           th:value="${#temporals.format(patientDto.birthDate, 'EEEE dd MMMM yyyy')}"/>
+                    <span class="span" th:errors="*{birthDate}" th:if="${#fields.hasErrors('birthDate')}"></span>
                 </div>
             </div>
             <div class="patient-flex">
                 <div class="patient-control">
                     <label class="label" for="phoneNumber">Numéro de téléphone du patient :</label>
-                    <input class="input" id="phoneNumber" name="phoneNumber" pattern="^0[6-7](\s\d{2}){4}$"
+                    <input class="input" id="phoneNumber" name="phoneNumber" pattern="^0[1-9](\s\d{2}){4}$"
                            placeholder="Numéro de téléphone" th:field="*{phoneNumber}"
                            title="Le numéro de téléphone du patient doit être au format 0X XX XX XX." type="tel"/>
                     <span class="span" th:errors="*{phoneNumber}" th:if="${#fields.hasErrors('phoneNumber')}"></span>

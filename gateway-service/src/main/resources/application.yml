@@ -10,28 +10,28 @@ spring:
         webflux:
           routes:
             - id: frontend-service
-              uri: http://localhost:8081
+              uri: ${FRONTEND_SERVICE_URL:http://localhost:8081}
               predicates:
                 - Path=/**
               order: 1000
 
             - id: auth-service
-              uri: http://localhost:8082
+              uri: ${AUTH_SERVICE_URL:http://localhost:8082}
               predicates:
                 - Path=/api/auth/**
 
             - id: patient-service
-              uri: http://localhost:8083
+              uri: ${PATIENT_SERVICE_URL:http://localhost:8083}
               predicates:
                 - Path=/api/patients/**
 
             - id: note-service
-              uri: http://localhost:8084
+              uri: ${NOTE_SERVICE_URL:http://localhost:8084}
               predicates:
                 - Path=/api/notes/**
 
             - id: assessment-service
-              uri: http://localhost:8085
+              uri: ${ASSESSMENT_SERVICE_URL:http://localhost:8085}
               predicates:
                 - Path=/api/assessment/**
 

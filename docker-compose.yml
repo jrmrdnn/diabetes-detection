@@ -1,0 +1,149 @@
+services:
+  gateway-service:
+    build: ./gateway-service
+    container_name: gateway-service
+    ports:
+      - "8080:8080"
+    networks:
+      - network
+    depends_on:
+      - frontend-service
+      - auth-service
+      - patient-service
+      - notes-service
+      - assessment-service
+    environment:
+      FRONTEND_SERVICE_URL: http://frontend-service:8081
+      AUTH_SERVICE_URL: http://auth-service:8082
+      PATIENT_SERVICE_URL: http://patient-service:8083
+      NOTE_SERVICE_URL: http://notes-service:8084
+      ASSESSMENT_SERVICE_URL: http://assessment-service:8085
+      JWT_PUBLIC_KEY_PATH: /run/secrets/jwt_public
+    secrets:
+      - jwt_public
+
+  frontend-service:
+    build: ./frontend-service
+    container_name: frontend-service
+    # ports:
+    #   - "8081:8081"
+    depends_on:
+      - auth-service
+      - patient-service
+      - notes-service
+      - assessment-service
+    networks:
+      - network
+    environment:
+      APP_URL: http://localhost:8080
+      AUTH_SERVICE_URL: http://auth-service:8082
+      PATIENT_SERVICE_URL: http://patient-service:8083
+      NOTE_SERVICE_URL: http://notes-service:8084
+      ASSESSMENT_SERVICE_URL: http://assessment-service:8085
+
+  auth-service:
+    build: ./auth-service
+    container_name: auth-service
+    # ports:
+    #   - "8082:8082"
+    networks:
+      - network
+    depends_on:
+      - mysql
+    environment:
+      MYSQL_URL: jdbc:mysql://mysql:3306/diabetes_detection?createDatabaseIfNotExist=true&serverTimezone=Europe/Paris
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      JWT_PRIVATE_KEY_PATH: /run/secrets/jwt_private
+    secrets:
+      - jwt_private
+
+  patient-service:
+    build: ./patient-service
+    container_name: patient-service
+    # ports:
+    #   - "8083:8083"
+    depends_on:
+      - mysql
+    environment:
+      MYSQL_URL: jdbc:mysql://mysql:3306/diabetes_detection?createDatabaseIfNotExist=true&serverTimezone=Europe/Paris
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    networks:
+      - network
+
+  notes-service:
+    build: ./note-service
+    container_name: note-service
+    # ports:
+    #   - "8084:8084"
+    depends_on:
+      - mongodb
+    environment:
+      MONGO_HOST: mongodb
+      MONGO_PORT: 27017
+      MONGODB_DATABASE: diabetes_detection
+      MONGODB_USERNAME: root
+      MONGODB_PASSWORD: password
+      MONGODB_AUTH: admin
+    networks:
+      - network
+
+  assessment-service:
+    build: ./assessment-service
+    container_name: assessment-service
+    # ports:
+    #   - "8085:8085"
+    depends_on:
+      - patient-service
+      - notes-service
+    environment:
+      PATIENT_SERVICE_URL: http://patient-service:8083
+      NOTE_SERVICE_URL: http://notes-service:8084
+    networks:
+      - network
+
+  mysql:
+    image: mysql:8.3
+    container_name: mysql
+    networks:
+      - network
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: diabetes_detection
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
+      TZ: Europe/Paris
+    volumes:
+      - mysql_data:/var/lib/mysql
+  
+  mongodb:
+    image: mongo:8.0
+    container_name: mongodb
+    networks:
+      - network
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: diabetes_detection
+      TZ: Europe/Paris
+    volumes:
+      - mongodb_data:/data/db
+
+volumes:
+  mysql_data:
+  mongodb_data:
+
+networks:
+  network:
+    driver: bridge
+
+secrets:
+  jwt_private:
+    file: secrets/jwt_private.pem
+  jwt_public:
+    file: secrets/jwt_public.pem

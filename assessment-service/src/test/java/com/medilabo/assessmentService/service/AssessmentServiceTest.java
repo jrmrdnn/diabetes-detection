@@ -56,7 +56,7 @@ class AssessmentServiceTest {
 
         NoteDto noteDto = new NoteDto();
         noteDto.setPatient(patientId.toString());
-        noteDto.setNote("Patient has diabetes");
+        noteDto.setNote("Note with trigger terms");
 
         when(noteFeignClient.getAllNotesByPatient(patientId)).thenReturn(Collections.singletonList(noteDto));
 
@@ -73,9 +73,7 @@ class AssessmentServiceTest {
     void testAssessDiabetesRisk_PatientNotFound() {
         when(patientFeignClient.getPatientById(patientId)).thenReturn(null);
 
-        RuntimeException exception = assertThrows(RuntimeException.class, () ->
-                assessmentService.assessDiabetesRisk(patientId)
-        );
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> assessmentService.assessDiabetesRisk(patientId));
 
         assertEquals("Patient not found", exception.getMessage());
     }
@@ -91,17 +89,8 @@ class AssessmentServiceTest {
         patientDto.setPhoneNumber("987-654-3210");
 
         when(patientFeignClient.getPatientById(patientId)).thenReturn(patientDto);
-        feign.Request request = feign.Request.create(
-                feign.Request.HttpMethod.GET,
-                "",
-                Collections.emptyMap(),
-                null,
-                null,
-                null
-        );
-        when(noteFeignClient.getAllNotesByPatient(patientId)).thenThrow(
-                new feign.FeignException.BadRequest("", request, null, java.util.Collections.emptyMap())
-        );
+        feign.Request request = feign.Request.create(feign.Request.HttpMethod.GET, "", Collections.emptyMap(), null, null, null);
+        when(noteFeignClient.getAllNotesByPatient(patientId)).thenThrow(new feign.FeignException.BadRequest("", request, null, java.util.Collections.emptyMap()));
 
         RuntimeException exception = assertThrows(RuntimeException.class, () -> assessmentService.assessDiabetesRisk(patientId));
         assertEquals("Error assessing diabetes risk: Feign client error", exception.getMessage());
@@ -121,9 +110,7 @@ class AssessmentServiceTest {
 
         when(noteFeignClient.getAllNotesByPatient(patientId)).thenReturn(null);
 
-        RuntimeException exception = assertThrows(RuntimeException.class, () ->
-                assessmentService.assessDiabetesRisk(patientId)
-        );
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> assessmentService.assessDiabetesRisk(patientId));
 
         assertEquals("Error assessing diabetes risk: Null value encountered", exception.getMessage());
     }
@@ -217,7 +204,7 @@ class AssessmentServiceTest {
         noteDto2.setPatient(patientId.toString());
         noteDto2.setNote("   ");
 
-        List<NoteDto> notes = Arrays.asList(noteDto1,noteDto2);
+        List<NoteDto> notes = Arrays.asList(noteDto1, noteDto2);
 
         Map<String, List<String>> categorizedTerms = new HashMap<>();
         categorizedTerms.put("Category1", List.of("trigger1"));

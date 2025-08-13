@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head th:replace="~{fragments/head :: head( ${'Patient: ' + (patient?.lastName ?: '?') + ' ' + (patient?.firstName ?: '?') + ' | Diabetes detection'}, 'Le détail du patient' )}"></head>
+<head th:replace="~{fragments/head :: head( ${'Patient: ' + (patientDto?.lastName ?: '?') + ' ' + (patientDto?.firstName ?: '?') + ' | Diabetes detection'}, 'Le détail du patient' )}"></head>
 <body>
 <header class="header" th:replace="~{fragments/header :: header}"></header>
 <div class="message-success" th:if="${successMessage}">
@@ -23,15 +23,15 @@
                     </path>
                 </g>
             </svg>
-            <h1 th:text="(${#strings.toUpperCase(patient?.gender)}=='M' ? 'M. ' : (${#strings.toUpperCase(patient?.gender)}=='F' ? 'Mme ' : '')) + (${#strings.toUpperCase(patient?.lastName) ?: 'Inconnu'}) + ' ' + (${patient?.firstName ?: ''})"></h1>
+            <h1 th:text="(${#strings.toUpperCase(patientDto?.gender)}=='M' ? 'M. ' : (${#strings.toUpperCase(patientDto?.gender)}=='F' ? 'Mme ' : '')) + (${#strings.toUpperCase(patientDto?.lastName) ?: 'Inconnu'}) + ' ' + (${patientDto?.firstName ?: ''})"></h1>
             <button class="btn"
-                    th:if="${patient?.id !=null}"
-                    th:onclick="|window.location.href='@{/patient/edit/{id}(id=${patient.id})}'|">
+                    th:if="${patientDto != null}"
+                    th:onclick="|window.location.href='@{/patient/edit/{id}(id=${id})}'|">
                 Modifier
             </button>
         </div>
         <div class="patient-content">
-            <div class="patient-info" th:switch="${#strings.toUpperCase(patient?.gender)}">
+            <div class="patient-info" th:switch="${#strings.toUpperCase(patientDto?.gender)}">
                 <svg height="32" viewBox="0 0 24 24" width="32" xmlns="http://www.w3.org/2000/svg">
                     <g fill="var(--content-accent)" fill-opacity="0" stroke="var(--content-secondary)"
                        stroke-linecap="round" stroke-linejoin="round"
@@ -78,7 +78,7 @@
                         </path>
                     </g>
                 </svg>
-                <span th:text="${(age !=null ? age + ' ans' : '')} + ' ' + ${#temporals.format(patient?.birthDate, '(dd/MM/yyyy)')}"></span>
+                <span th:text="${(age != null ? age + ' ans' : '')} + ' ' + ${#temporals.format(patientDto?.birthDate, '(dd/MM/yyyy)')}"></span>
             </div>
             <div class="patient-info">
                 <svg height="32" viewBox="0 0 24 24" width="32" xmlns="http://www.w3.org/2000/svg">
@@ -105,7 +105,7 @@
                         </path>
                     </g>
                 </svg>
-                <span th:text="${patient?.postalAddress ?: 'inconnu'}"></span>
+                <span th:text="${patientDto?.postalAddress ?: 'inconnu'}"></span>
             </div>
             <div class="patient-info">
                 <svg height="32" viewBox="0 0 24 24" width="32" xmlns="http://www.w3.org/2000/svg">
@@ -119,12 +119,14 @@
                         <animate attributeName="stroke-dashoffset" dur="1.2s" fill="freeze" values="64;0"/>
                     </path>
                 </svg>
-                <span th:text="${patient?.phoneNumber ?: 'inconnu'}"></span>
+                <span th:text="${patientDto?.phoneNumber ?: 'inconnu'}"></span>
             </div>
             <div class="patient-info">
                 <svg height="32" viewBox="0 0 576 512" width="32" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M142.4 21.9c5.6 16.8-3.5 34.9-20.2 40.5L96 71.1V192c0 53 43 96 96 96s96-43 96-96V71.1l-26.1-8.7c-16.8-5.6-25.8-23.7-20.2-40.5s23.7-25.8 40.5-20.2l26.1 8.7c26.1 8.7 43.7 33.1 43.7 60.7V192c0 77.2-54.6 141.6-127.3 156.7C231 404.6 278.4 448 336 448c61.9 0 112-50.1 112-112v-70.7c-28.3-12.3-48-40.5-48-73.3c0-44.2 35.8-80 80-80s80 35.8 80 80c0 32.8-19.7 61-48 73.3V336c0 97.2-78.8 176-176 176c-92.9 0-168.9-71.9-175.5-163.1C87.2 334.2 32 269.6 32 192V71.1c0-27.5 17.6-52 43.8-60.7l26.1-8.7c16.8-5.6 34.9 3.5 40.5 20.2M480 224a32 32 0 1 0 0-64a32 32 0 1 0 0 64" fill="var(--content-accent)" fill-opacity="0"
-                          stroke="var(--content-secondary)" stroke-dasharray="3200" stroke-dashoffset="3200" stroke-linecap="round"
+                    <path d="M142.4 21.9c5.6 16.8-3.5 34.9-20.2 40.5L96 71.1V192c0 53 43 96 96 96s96-43 96-96V71.1l-26.1-8.7c-16.8-5.6-25.8-23.7-20.2-40.5s23.7-25.8 40.5-20.2l26.1 8.7c26.1 8.7 43.7 33.1 43.7 60.7V192c0 77.2-54.6 141.6-127.3 156.7C231 404.6 278.4 448 336 448c61.9 0 112-50.1 112-112v-70.7c-28.3-12.3-48-40.5-48-73.3c0-44.2 35.8-80 80-80s80 35.8 80 80c0 32.8-19.7 61-48 73.3V336c0 97.2-78.8 176-176 176c-92.9 0-168.9-71.9-175.5-163.1C87.2 334.2 32 269.6 32 192V71.1c0-27.5 17.6-52 43.8-60.7l26.1-8.7c16.8-5.6 34.9 3.5 40.5 20.2M480 224a32 32 0 1 0 0-64a32 32 0 1 0 0 64"
+                          fill="var(--content-accent)" fill-opacity="0"
+                          stroke="var(--content-secondary)" stroke-dasharray="3200" stroke-dashoffset="3200"
+                          stroke-linecap="round"
                           stroke-linejoin="round"
                           stroke-width="35">
                         <animate attributeName="stroke-dashoffset" dur="1.2s" fill="freeze" values="3200;0"/>
@@ -164,12 +166,11 @@
                 <textarea-component>
                     <form method="post" th:action="@{/note}" th:object="${noteDto}">
                         <input name="patient"
-                               th:value="${patient?.id}"
+                               th:value="${id}"
                                type="hidden"/>
-                        <textarea
-                                autofocus maxlength="1000" minlength="10"
-                                name="note"
-                                placeholder="Écrivez votre note ici..." required th:field="*{note}">
+                        <textarea autofocus maxlength="1000" minlength="10"
+                                  name="note"
+                                  placeholder="Écrivez votre note ici..." required th:field="*{note}">
                         </textarea>
                         <span class="span"
                               th:errors="*{note}"
@@ -181,13 +182,13 @@
             </div>
             <div class="container-timeline">
                 <timeline-component open="false" th:csrf="${_csrf.token}" th:each="note : ${notes?.data}"
-                                    th:noteId="${note.id}" th:patientId="${patient.id}">
+                                    th:noteId="${note?.id}" th:patientId="${id}">
                     <div class="timeline">
                         <div class="timeline-container">
                             <div class="timeline-icon"></div>
                             <div class="timeline-body">
                                 <span th:text="${#temporals.format(note.createdAt, 'EE dd MMM yy')}"></span>
-                                <p th:text="${note.note}"></p>
+                                <p th:text="${note?.note}"></p>
                                 <div class="timeline-actions">
                                     <div class="timeline-edit">
                                         <svg height="15" viewBox="0 0 512 512" width="15"
@@ -197,7 +198,7 @@
                                         </svg>
                                     </div>
                                     <form class="timeline-delete" method="post"
-                                          th:action="@{/note/{id}(id=${note.id}, patientId=${patient.id})}">
+                                          th:action="@{/note/{id}(id=${note?.id}, patientId=${id})}">
                                         <input name="_method" type="hidden" value="DELETE"/>
                                         <button class="btn-hidden" type="submit">
                                             <svg height="15"
@@ -218,10 +219,10 @@
             </div>
             <pagination-component
                     class="app-pagination"
-                    th:current-page="${notes?.currentPage !=null ? notes.currentPage + 1 : 1}"
-                    th:page-size="${notes?.pageSize !=null ? notes.pageSize : 5}"
-                    th:total-elements="${notes?.totalElements !=null ? notes.totalElements : 0}"
-                    th:total-pages="${notes?.totalPages !=null ? notes.totalPages : 1}">
+                    th:current-page="${notes?.currentPage != null ? notes.currentPage + 1 : 1}"
+                    th:page-size="${notes?.pageSize != null ? notes.pageSize : 5}"
+                    th:total-elements="${notes?.totalElements != null ? notes.totalElements : 0}"
+                    th:total-pages="${notes?.totalPages != null ? notes.totalPages : 1}">
             </pagination-component>
         </div>
     </div>

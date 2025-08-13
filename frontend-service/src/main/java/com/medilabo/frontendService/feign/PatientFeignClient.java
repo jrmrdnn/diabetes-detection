@@ -8,7 +8,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-@FeignClient(name = "patient-service", path = "/api/patients", url = "http://localhost:8083", configuration = FeignConfig.class)
+@FeignClient(
+        name = "patient-service",
+        path = "/api/patients",
+        url = "${PATIENT_SERVICE_URL:http://localhost:8083}",
+        configuration = FeignConfig.class
+)
 public interface PatientFeignClient {
     @GetMapping
     PatientsDto getAllPatients();
@@ -22,14 +27,11 @@ public interface PatientFeignClient {
     );
 
     @GetMapping("/{id}")
-    PatientsDto.Patient getPatientById(@PathVariable UUID id);
+    PatientDto getPatientById(@PathVariable UUID id);
 
     @PostMapping("/add")
     String addPatient(PatientDto addPatientDto);
 
     @PutMapping("/{id}")
-    void updatePatient(@PathVariable String id, PatientDto patientDto);
-
-    @DeleteMapping("/{id}")
-    void deletePatient(@PathVariable String id);
+    void updatePatient(@PathVariable UUID id, PatientDto patientDto);
 }

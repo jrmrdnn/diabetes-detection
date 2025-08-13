@@ -3,7 +3,6 @@ package com.medilabo.frontendService.controller;
 import com.medilabo.frontendService.dto.Gender;
 import com.medilabo.frontendService.dto.NoteDto;
 import com.medilabo.frontendService.dto.PatientDto;
-import com.medilabo.frontendService.dto.PatientsDto;
 import com.medilabo.frontendService.feign.AssessmentFeignClient;
 import com.medilabo.frontendService.feign.NoteFeignClient;
 import com.medilabo.frontendService.feign.PatientFeignClient;
@@ -34,24 +33,19 @@ public class PatientController {
     private String baseUrl;
 
     @GetMapping("/{id}")
-    public String showPatient(
-            @PathVariable UUID id,
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "5") int size,
-            Model model) {
+    public String showPatient(@PathVariable UUID id, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "5") int size, Model model) {
         try {
-            PatientDto patient = patientFeignClient.getPatientById(id);
-            model.addAttribute("patient", patient);
-            model.addAttribute("age", patientService.calculateAge(patient.getBirthDate()));
+            PatientDto patientDto = patientFeignClient.getPatientById(id);
+            model.addAttribute("id", id.toString());
+            model.addAttribute("patientDto", patientDto);
+            model.addAttribute("age", patientService.calculateAge(patientDto.getBirthDate()));
             model.addAttribute("notes", noteFeignClient.getNotesByPatient(id.toString(), page - 1, size));
             model.addAttribute("noteDto", new NoteDto());
             model.addAttribute("assessment", assessmentFeignClient.assess(id));
         } catch (FeignException e) {
             model.addAttribute("errorMessage", "Patient introuvable pour l’ID : " + id);
-            return "patient";
         } catch (Exception e) {
             model.addAttribute("errorMessage", "Une erreur inattendue est survenue");
-            return "patient";
         }
         return "patient";
     }
@@ -59,9 +53,9 @@ public class PatientController {
     @GetMapping("/edit/{id}")
     public String editPatient(@PathVariable UUID id, Model model) {
         try {
-            PatientsDto.Patient patient = patientFeignClient.getPatientById(id);
-            model.addAttribute("patient", patient);
-            model.addAttribute("patientDto", patientService.getPatientDto(patient));
+            PatientDto patientDto = patientFeignClient.getPatientById(id);
+            model.addAttribute("patientId", id.toString());
+            model.addAttribute("patientDto", patientDto);
         } catch (FeignException e) {
             model.addAttribute("errorMessage", "Patient introuvable pour l’ID : " + id);
         }
@@ -77,11 +71,7 @@ public class PatientController {
     }
 
     @PostMapping("/add")
-    public String addPatient(
-            RedirectAttributes redirectAttributes,
-            @Valid @ModelAttribute PatientDto PatientDto,
-            BindingResult result,
-            Model model) {
+    public String addPatient(RedirectAttributes redirectAttributes, @Valid @ModelAttribute PatientDto PatientDto, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("genders", Gender.values());
             return "add-patient";
@@ -100,23 +90,19 @@ public class PatientController {
     }
 
     @PutMapping("/edit/{id}")
-    public String editPatient(
-            RedirectAttributes redirectAttributes,
-            @PathVariable UUID id,
-            @Valid @ModelAttribute PatientDto PatientDto,
-            BindingResult result,
-            Model model) {
+    public String editPatient(RedirectAttributes redirectAttributes, @PathVariable UUID id, @Valid @ModelAttribute PatientDto patientDto, BindingResult result, Model model) {
+
         if (result.hasErrors()) {
-            model.addAttribute("genders", Gender.values());
+            model.addAttribute("patientId", id.toString());
+            model.addAttribute("errorMessage", "Erreur lors de la mise à jour du patient");
             return "edit-patient";
         }
 
         try {
-            patientFeignClient.updatePatient(id.toString(), PatientDto);
+            patientFeignClient.updatePatient(id, patientDto);
             redirectAttributes.addFlashAttribute("successMessage", "Patient mis à jour avec succès");
             return "redirect:" + baseUrl + "/patient/" + id;
         } catch (FeignException e) {
-            model.addAttribute("genders", Gender.values());
             model.addAttribute("errorMessage", "Erreur lors de la mise à jour du patient");
         }
 

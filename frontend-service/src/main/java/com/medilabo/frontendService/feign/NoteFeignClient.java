@@ -6,7 +6,7 @@ import com.medilabo.frontendService.dto.NotesDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
-@FeignClient(name = "note-service", path = "/api/notes", url = "http://localhost:8084", configuration = FeignConfig.class)
+@FeignClient(name = "note-service", path = "/api/notes", url = "${NOTE_SERVICE_URL:http://localhost:8084}", configuration = FeignConfig.class)
 public interface NoteFeignClient {
     @GetMapping("/patient/{patient}")
     NotesDto getNotesByPatient(

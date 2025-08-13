@@ -39,44 +39,35 @@ public class LoginController {
             BindingResult result,
             Model model
     ) {
-        if (result.hasErrors()) return "/login";
+        if (result.hasErrors()) return "login";
 
         try {
             String response = authFeignClient.auth(userDto);
 
-            if ("Utilisateur non trouvé".equals(response)) {
+            if ("User not found".equals(response)) {
                 model.addAttribute("errorMessage", "Nom d'utilisateur ou mot de passe incorrect");
-                return "/login";
+                return "login";
             }
 
             jwtService.createAuthCookieHeader(response, httpResponse);
-            redirectAttributes.addFlashAttribute(
-                    "successMessage",
-                    "Connexion réussie"
-            );
+            redirectAttributes.addFlashAttribute("successMessage", "Connexion réussie");
             return "redirect:" + baseUrl + "/app";
         } catch (Exception e) {
             log.error("Erreur lors de l'authentification: {}", e.getMessage());
-            redirectAttributes.addFlashAttribute("errorMessage", "Erreur lors de l'authentification");
+            model.addAttribute("errorMessage", "Erreur lors de l'authentification");
         }
-        return "/login";
+        return "login";
     }
 
     @DeleteMapping
     public String logout(RedirectAttributes redirectAttributes, HttpServletResponse httpResponse) {
         try {
             jwtService.deleteAuthCookieHeader(httpResponse);
-            redirectAttributes.addFlashAttribute(
-                    "successMessage",
-                    "Déconnexion réussie"
-            );
+            redirectAttributes.addFlashAttribute("successMessage", "Déconnexion réussie");
             return "redirect:" + baseUrl + "/login";
         } catch (Exception e) {
             log.error("Erreur lors de la déconnexion: {}", e.getMessage());
-            redirectAttributes.addFlashAttribute(
-                    "errorMessage",
-                    "Erreur lors de la déconnexion"
-            );
+            redirectAttributes.addFlashAttribute("errorMessage", "Erreur lors de la déconnexion");
             return "redirect:" + baseUrl + "/login";
         }
     }
