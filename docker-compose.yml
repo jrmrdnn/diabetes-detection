@@ -1,4 +1,12 @@
 services:
+  eureka-server:
+    build: ./eureka-server
+    container_name: eureka-server
+    # ports:
+    #   - "8761:8761"
+    networks:
+      - network
+
   gateway-service:
     build: ./gateway-service
     container_name: gateway-service
@@ -7,11 +15,7 @@ services:
     networks:
       - network
     depends_on:
-      - frontend-service
-      - auth-service
-      - patient-service
-      - notes-service
-      - assessment-service
+      - eureka-server
     environment:
       FRONTEND_SERVICE_URL: http://frontend-service:8081
       AUTH_SERVICE_URL: http://auth-service:8082
@@ -28,6 +32,8 @@ services:
     # ports:
     #   - "8081:8081"
     depends_on:
+      - eureka-server
+      - gateway-service
       - auth-service
       - patient-service
       - notes-service
@@ -49,6 +55,8 @@ services:
     networks:
       - network
     depends_on:
+      - eureka-server
+      - gateway-service
       - mysql
     environment:
       MYSQL_URL: jdbc:mysql://mysql:3306/diabetes_detection?createDatabaseIfNotExist=true&serverTimezone=Europe/Paris
@@ -64,6 +72,8 @@ services:
     # ports:
     #   - "8083:8083"
     depends_on:
+      - eureka-server
+      - gateway-service
       - mysql
     environment:
       MYSQL_URL: jdbc:mysql://mysql:3306/diabetes_detection?createDatabaseIfNotExist=true&serverTimezone=Europe/Paris
@@ -78,6 +88,8 @@ services:
     # ports:
     #   - "8084:8084"
     depends_on:
+      - eureka-server
+      - gateway-service
       - mongodb
     environment:
       MONGO_HOST: mongodb
@@ -95,6 +107,8 @@ services:
     # ports:
     #   - "8085:8085"
     depends_on:
+      - eureka-server
+      - gateway-service
       - patient-service
       - notes-service
     environment:
@@ -108,8 +122,8 @@ services:
     container_name: mysql
     networks:
       - network
-    ports:
-      - "3306:3306"
+    # ports:
+    #   - "3306:3306"
     environment:
       MYSQL_DATABASE: diabetes_detection
       MYSQL_USER: user
@@ -124,8 +138,8 @@ services:
     container_name: mongodb
     networks:
       - network
-    ports:
-      - "27017:27017"
+    # ports:
+    #   - "27017:27017"
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: password

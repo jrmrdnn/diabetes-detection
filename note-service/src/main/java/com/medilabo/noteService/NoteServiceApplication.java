@@ -2,11 +2,13 @@ package com.medilabo.noteService;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 /**
  * Main application class for the Note Service.
  * This service is responsible for managing notes in the system.
  */
+@EnableDiscoveryClient
 @SpringBootApplication
 public class NoteServiceApplication {
 

@@ -11,6 +11,11 @@ spring:
       filter:
         enabled: true
 
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
+
 baseUrl: ${APP_URL:http://localhost:8080}
 
 jwt:
