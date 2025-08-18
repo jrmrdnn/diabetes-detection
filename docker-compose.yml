@@ -2,8 +2,8 @@ services:
   eureka-server:
     build: ./eureka-server
     container_name: eureka-server
-    # ports:
-    #   - "8761:8761"
+    ports:
+      - "8761:8761"
     networks:
       - network
 
@@ -17,6 +17,7 @@ services:
     depends_on:
       - eureka-server
     environment:
+      EUREKA_URL: http://eureka-server:8761/eureka/
       FRONTEND_SERVICE_URL: http://frontend-service:8081
       AUTH_SERVICE_URL: http://auth-service:8082
       PATIENT_SERVICE_URL: http://patient-service:8083
@@ -28,7 +29,7 @@ services:
 
   frontend-service:
     build: ./frontend-service
-    container_name: frontend-service
+    # container_name: frontend-service
     # ports:
     #   - "8081:8081"
     depends_on:
@@ -42,14 +43,19 @@ services:
       - network
     environment:
       APP_URL: http://localhost:8080
+      EUREKA_URL: http://eureka-server:8761/eureka/
       AUTH_SERVICE_URL: http://auth-service:8082
       PATIENT_SERVICE_URL: http://patient-service:8083
       NOTE_SERVICE_URL: http://notes-service:8084
       ASSESSMENT_SERVICE_URL: http://assessment-service:8085
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
 
   auth-service:
     build: ./auth-service
-    container_name: auth-service
+    # container_name: auth-service
     # ports:
     #   - "8082:8082"
     networks:
@@ -59,16 +65,21 @@ services:
       - gateway-service
       - mysql
     environment:
+      EUREKA_URL: http://eureka-server:8761/eureka/
       MYSQL_URL: jdbc:mysql://mysql:3306/diabetes_detection?createDatabaseIfNotExist=true&serverTimezone=Europe/Paris
       MYSQL_USER: user
       MYSQL_PASSWORD: password
       JWT_PRIVATE_KEY_PATH: /run/secrets/jwt_private
     secrets:
       - jwt_private
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
 
   patient-service:
     build: ./patient-service
-    container_name: patient-service
+    # container_name: patient-service
     # ports:
     #   - "8083:8083"
     depends_on:
@@ -76,15 +87,20 @@ services:
       - gateway-service
       - mysql
     environment:
+      EUREKA_URL: http://eureka-server:8761/eureka/
       MYSQL_URL: jdbc:mysql://mysql:3306/diabetes_detection?createDatabaseIfNotExist=true&serverTimezone=Europe/Paris
       MYSQL_USER: user
       MYSQL_PASSWORD: password
     networks:
       - network
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
 
   notes-service:
     build: ./note-service
-    container_name: note-service
+    # container_name: note-service
     # ports:
     #   - "8084:8084"
     depends_on:
@@ -92,6 +108,7 @@ services:
       - gateway-service
       - mongodb
     environment:
+      EUREKA_URL: http://eureka-server:8761/eureka/
       MONGO_HOST: mongodb
       MONGO_PORT: 27017
       MONGODB_DATABASE: diabetes_detection
@@ -100,10 +117,14 @@ services:
       MONGODB_AUTH: admin
     networks:
       - network
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
 
   assessment-service:
     build: ./assessment-service
-    container_name: assessment-service
+    # container_name: assessment-service
     # ports:
     #   - "8085:8085"
     depends_on:
@@ -112,10 +133,15 @@ services:
       - patient-service
       - notes-service
     environment:
+      EUREKA_URL: http://eureka-server:8761/eureka/
       PATIENT_SERVICE_URL: http://patient-service:8083
       NOTE_SERVICE_URL: http://notes-service:8084
     networks:
       - network
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
 
   mysql:
     image: mysql:8.3

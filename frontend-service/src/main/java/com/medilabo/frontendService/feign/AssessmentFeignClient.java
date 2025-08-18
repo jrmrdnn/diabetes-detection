@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.UUID;
 
-@FeignClient(name = "assessment-service", path = "/api/assessment", url = "${ASSESSMENT_SERVICE_URL:http://localhost:8085}", configuration = FeignConfig.class)
+@FeignClient(name = "assessment-service", path = "/api/assessment", configuration = FeignConfig.class)
 public interface AssessmentFeignClient {
     @GetMapping("/{patientId}")
     AssessmentDto assess(@PathVariable UUID patientId);

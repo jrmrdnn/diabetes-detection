@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 @FeignClient(
   name = "patient-service",
   path = "/api/patients",
-  url = "${PATIENT_SERVICE_URL:http://localhost:8083}",
   configuration = FeignConfig.class
 )
 public interface PatientFeignClient {

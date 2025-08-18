@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 @FeignClient(
   name = "note-service",
   path = "/api/notes",
-  url = "${NOTE_SERVICE_URL:http://localhost:8084}",
   configuration = FeignConfig.class
 )
 public interface NoteFeignClient {
