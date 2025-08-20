@@ -8,6 +8,8 @@ import com.medilabo.frontendService.service.PatientService;
 import feign.FeignException;
 import feign.Request;
 import feign.Response;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -43,6 +45,13 @@ public class PatientControllerTest {
     @Mock
     private PatientService patientService;
 
+    @Mock
+    private HttpServletRequest request;
+
+    @Mock
+    private HttpSession session;
+
+
     private PatientController controller;
 
     @BeforeEach
@@ -54,6 +63,8 @@ public class PatientControllerTest {
         assertNotNull(baseUrlField);
         ReflectionUtils.makeAccessible(baseUrlField);
         ReflectionUtils.setField(baseUrlField, controller, "http://localhost:8080");
+
+        when(request.getSession(true)).thenReturn(session);
     }
 
     private FeignException makeFeignNotFound() {
@@ -75,7 +86,7 @@ public class PatientControllerTest {
         AssessmentDto mockAssessment = mock(AssessmentDto.class);
         when(assessmentFeignClient.assess(id)).thenReturn(mockAssessment);
 
-        String view = controller.showPatient(id, 1, 5, model);
+        String view = controller.showPatient(request, id, 1, 5, model);
 
         assertEquals("patient", view);
         assertSame(model.getAttribute("patientDto"), mockPatient);
@@ -91,10 +102,10 @@ public class PatientControllerTest {
         Model model = new ExtendedModelMap();
         when(patientFeignClient.getPatientById(id)).thenThrow(makeFeignNotFound());
 
-        String view = controller.showPatient(id, 1, 5, model);
+        String view = controller.showPatient(request, id, 1, 5, model);
 
         assertEquals("patient", view);
-        assertEquals("Patient introuvable pour l’ID : " + id, model.getAttribute("errorMessage"));
+        assertEquals("Patient introuvable pour l'ID : " + id, model.getAttribute("errorMessage"));
     }
 
     @Test
@@ -103,10 +114,10 @@ public class PatientControllerTest {
         Model model = new ExtendedModelMap();
         when(patientFeignClient.getPatientById(id)).thenThrow(new RuntimeException("boom"));
 
-        String view = controller.showPatient(id, 1, 5, model);
+        String view = controller.showPatient(request, id, 1, 5, model);
 
         assertEquals("patient", view);
-        assertEquals("Une erreur inattendue est survenue", model.getAttribute("errorMessage"));
+        assertEquals("Une erreur inattendue est survenue lors du chargement du patient", model.getAttribute("errorMessage"));
     }
 
     @Test
@@ -147,7 +158,7 @@ public class PatientControllerTest {
         assertEquals("add-patient", view);
         assertNotNull(model.getAttribute("patientDto"));
         Object genders = model.getAttribute("genders");
-        assertTrue(genders instanceof Gender[]);
+        assertInstanceOf(Gender[].class, genders);
         assertTrue(((Gender[]) genders).length > 0);
     }
 
@@ -218,7 +229,6 @@ public class PatientControllerTest {
         UUID id = UUID.randomUUID();
         PatientDto dto = mock(PatientDto.class);
 
-        // no exception on update
         doNothing().when(patientFeignClient).updatePatient(id, dto);
 
         String view = controller.editPatient(ra, id, dto, result, new ExtendedModelMap());
@@ -243,5 +253,164 @@ public class PatientControllerTest {
 
         assertEquals("edit-patient", view);
         assertEquals("Erreur lors de la mise à jour du patient", model.getAttribute("errorMessage"));
+    }
+
+    @Test
+    void loadPatientData_whenFeignException_setsSpecificErrorMessage() {
+        UUID id = UUID.randomUUID();
+        Model model = new ExtendedModelMap();
+
+        when(patientFeignClient.getPatientById(id)).thenThrow(makeFeignNotFound());
+
+        String view = controller.showPatient(request, id, 1, 5, model);
+
+        assertEquals("patient", view);
+        assertEquals("Patient introuvable pour l'ID : " + id, model.getAttribute("errorMessage"));
+        //assertNull(model.getAttribute("patientDto"));
+        verify(patientFeignClient).getPatientById(id);
+        verify(noteFeignClient, never()).getNotesByPatient(anyString(), anyInt(), anyInt());
+        verify(assessmentFeignClient, never()).assess(any(UUID.class));
+    }
+
+    @Test
+    void loadPatientData_whenGenericException_setsGenericErrorMessage() {
+        UUID id = UUID.randomUUID();
+        Model model = new ExtendedModelMap();
+
+        when(patientFeignClient.getPatientById(id)).thenThrow(new IllegalArgumentException("Erreur de validation"));
+
+        String view = controller.showPatient(request, id, 1, 5, model);
+
+        assertEquals("patient", view);
+        assertEquals("Une erreur inattendue est survenue lors du chargement du patient", model.getAttribute("errorMessage"));
+        //assertNull(model.getAttribute("patientDto"));
+        verify(patientFeignClient).getPatientById(id);
+        verify(noteFeignClient, never()).getNotesByPatient(anyString(), anyInt(), anyInt());
+        verify(assessmentFeignClient, never()).assess(any(UUID.class));
+    }
+
+    @Test
+    void loadPatientData_whenNullPointerException_setsGenericErrorMessage() {
+        UUID id = UUID.randomUUID();
+        Model model = new ExtendedModelMap();
+
+        when(patientFeignClient.getPatientById(id)).thenThrow(new NullPointerException("Données null inattendues"));
+
+        String view = controller.showPatient(request, id, 1, 5, model);
+
+        assertEquals("patient", view);
+        assertEquals("Une erreur inattendue est survenue lors du chargement du patient", model.getAttribute("errorMessage"));
+        //assertNull(model.getAttribute("patientDto"));
+        verify(patientFeignClient).getPatientById(id);
+    }
+
+    @Test
+    void loadNotesData_whenFeignException_setsNotesError() {
+        UUID id = UUID.randomUUID();
+        Model model = new ExtendedModelMap();
+
+        PatientDto mockPatient = mock(PatientDto.class);
+        when(patientFeignClient.getPatientById(id)).thenReturn(mockPatient);
+        when(mockPatient.getBirthDate()).thenReturn(LocalDate.of(1990, 1, 1));
+        doReturn("35").when(patientService).calculateAge(LocalDate.of(1990, 1, 1));
+
+        when(noteFeignClient.getNotesByPatient(eq(id.toString()), anyInt(), anyInt())).thenThrow(makeFeignNotFound());
+
+        AssessmentDto mockAssessment = mock(AssessmentDto.class);
+        when(assessmentFeignClient.assess(id)).thenReturn(mockAssessment);
+
+        String view = controller.showPatient(request, id, 1, 5, model);
+
+        assertEquals("patient", view);
+        assertEquals("Notes indisponibles temporairement", model.getAttribute("notesError"));
+        assertNotNull(model.getAttribute("patientDto"));
+        assertNotNull(model.getAttribute("assessment"));
+    }
+
+    @Test
+    void loadNotesData_whenGenericException_setsNotesError() {
+        UUID id = UUID.randomUUID();
+        Model model = new ExtendedModelMap();
+
+        PatientDto mockPatient = mock(PatientDto.class);
+        when(patientFeignClient.getPatientById(id)).thenReturn(mockPatient);
+        when(mockPatient.getBirthDate()).thenReturn(LocalDate.of(1990, 1, 1));
+        doReturn("35").when(patientService).calculateAge(LocalDate.of(1990, 1, 1));
+
+        when(noteFeignClient.getNotesByPatient(eq(id.toString()), anyInt(), anyInt())).thenThrow(new RuntimeException("Erreur réseau"));
+
+        AssessmentDto mockAssessment = mock(AssessmentDto.class);
+        when(assessmentFeignClient.assess(id)).thenReturn(mockAssessment);
+
+        String view = controller.showPatient(request, id, 1, 5, model);
+
+        assertEquals("patient", view);
+        assertEquals("Erreur lors du chargement des notes", model.getAttribute("notesError"));
+        assertNotNull(model.getAttribute("patientDto"));
+        assertNotNull(model.getAttribute("assessment"));
+    }
+
+    @Test
+    void loadAssessmentData_whenFeignException_setsAssessmentError() {
+        UUID id = UUID.randomUUID();
+        Model model = new ExtendedModelMap();
+
+        PatientDto mockPatient = mock(PatientDto.class);
+        when(patientFeignClient.getPatientById(id)).thenReturn(mockPatient);
+        when(mockPatient.getBirthDate()).thenReturn(LocalDate.of(1990, 1, 1));
+        doReturn("35").when(patientService).calculateAge(LocalDate.of(1990, 1, 1));
+
+        when(noteFeignClient.getNotesByPatient(eq(id.toString()), anyInt(), anyInt())).thenReturn(mock(NotesDto.class));
+        when(assessmentFeignClient.assess(id)).thenThrow(makeFeignNotFound());
+
+        String view = controller.showPatient(request, id, 1, 5, model);
+
+        assertEquals("patient", view);
+        assertEquals("Évaluation indisponible temporairement", model.getAttribute("assessmentError"));
+        assertNotNull(model.getAttribute("patientDto"));
+        assertNotNull(model.getAttribute("notes"));
+    }
+
+    @Test
+    void loadAssessmentData_whenGenericException_setsAssessmentError() {
+        UUID id = UUID.randomUUID();
+        Model model = new ExtendedModelMap();
+
+        PatientDto mockPatient = mock(PatientDto.class);
+        when(patientFeignClient.getPatientById(id)).thenReturn(mockPatient);
+        when(mockPatient.getBirthDate()).thenReturn(LocalDate.of(1990, 1, 1));
+        doReturn("35").when(patientService).calculateAge(LocalDate.of(1990, 1, 1));
+
+        when(noteFeignClient.getNotesByPatient(eq(id.toString()), anyInt(), anyInt())).thenReturn(mock(NotesDto.class));
+        when(assessmentFeignClient.assess(id)).thenThrow(new IllegalStateException("Service indisponible"));
+
+        String view = controller.showPatient(request, id, 1, 5, model);
+
+        assertEquals("patient", view);
+        assertEquals("Erreur lors du chargement de l'évaluation", model.getAttribute("assessmentError"));
+        assertNotNull(model.getAttribute("patientDto"));
+        assertNotNull(model.getAttribute("notes"));
+    }
+
+    @Test
+    void showPatient_multipleCascadingErrors_handlesAllErrorsGracefully() {
+        UUID id = UUID.randomUUID();
+        Model model = new ExtendedModelMap();
+
+        PatientDto mockPatient = mock(PatientDto.class);
+        when(patientFeignClient.getPatientById(id)).thenReturn(mockPatient);
+        when(mockPatient.getBirthDate()).thenReturn(LocalDate.of(1990, 1, 1));
+        doReturn("35").when(patientService).calculateAge(LocalDate.of(1990, 1, 1));
+
+        when(noteFeignClient.getNotesByPatient(eq(id.toString()), anyInt(), anyInt())).thenThrow(makeFeignNotFound());
+        when(assessmentFeignClient.assess(id)).thenThrow(new RuntimeException("Service indisponible"));
+
+        String view = controller.showPatient(request, id, 1, 5, model);
+
+        assertEquals("patient", view);
+        assertNotNull(model.getAttribute("patientDto"));
+        assertEquals("Notes indisponibles temporairement", model.getAttribute("notesError"));
+        assertEquals("Erreur lors du chargement de l'évaluation", model.getAttribute("assessmentError"));
+        assertFalse(model.containsAttribute("errorMessage"));
     }
 }

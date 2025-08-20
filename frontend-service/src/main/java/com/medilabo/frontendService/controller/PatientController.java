@@ -1,15 +1,15 @@
 package com.medilabo.frontendService.controller;
 
-import com.medilabo.frontendService.dto.Gender;
-import com.medilabo.frontendService.dto.NoteDto;
-import com.medilabo.frontendService.dto.PatientDto;
+import com.medilabo.frontendService.dto.*;
 import com.medilabo.frontendService.feign.AssessmentFeignClient;
 import com.medilabo.frontendService.feign.NoteFeignClient;
 import com.medilabo.frontendService.feign.PatientFeignClient;
 import com.medilabo.frontendService.service.PatientService;
 import feign.FeignException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.UUID;
 
+@Slf4j
 @Controller
 @RequestMapping("/patient")
 @RequiredArgsConstructor
@@ -33,20 +34,22 @@ public class PatientController {
     private String baseUrl;
 
     @GetMapping("/{id}")
-    public String showPatient(@PathVariable UUID id, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "5") int size, Model model) {
-        try {
-            PatientDto patientDto = patientFeignClient.getPatientById(id);
-            model.addAttribute("id", id.toString());
-            model.addAttribute("patientDto", patientDto);
-            model.addAttribute("age", patientService.calculateAge(patientDto.getBirthDate()));
-            model.addAttribute("notes", noteFeignClient.getNotesByPatient(id.toString(), page - 1, size));
-            model.addAttribute("noteDto", new NoteDto());
-            model.addAttribute("assessment", assessmentFeignClient.assess(id));
-        } catch (FeignException e) {
-            model.addAttribute("errorMessage", "Patient introuvable pour l’ID : " + id);
-        } catch (Exception e) {
-            model.addAttribute("errorMessage", "Une erreur inattendue est survenue");
-        }
+    public String showPatient(
+            HttpServletRequest request,
+            @PathVariable UUID id,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "5") int size,
+            Model model) {
+        request.getSession(true);
+
+        initializeDefaultModelAttributes(model, id);
+
+        PatientDto patientDto = loadPatientData(id, model);
+        if (patientDto == null) return "patient";
+
+        loadNotesData(id, page - 1, size, model);
+        loadAssessmentData(id, model);
+
         return "patient";
     }
 
@@ -57,6 +60,7 @@ public class PatientController {
             model.addAttribute("patientId", id.toString());
             model.addAttribute("patientDto", patientDto);
         } catch (FeignException e) {
+            log.error("Error retrieving patient data for ID {}", id, e);
             model.addAttribute("errorMessage", "Patient introuvable pour l’ID : " + id);
         }
 
@@ -82,6 +86,7 @@ public class PatientController {
             redirectAttributes.addFlashAttribute("successMessage", "Patient ajouté avec succès");
             return "redirect:" + baseUrl + "/patient/" + id;
         } catch (FeignException e) {
+            log.error("Error adding patient {}", PatientDto, e);
             model.addAttribute("genders", Gender.values());
             model.addAttribute("errorMessage", "Erreur lors de l'ajout du patient");
         }
@@ -103,9 +108,61 @@ public class PatientController {
             redirectAttributes.addFlashAttribute("successMessage", "Patient mis à jour avec succès");
             return "redirect:" + baseUrl + "/patient/" + id;
         } catch (FeignException e) {
+            log.error("Error updating patient {}", patientDto, e);
             model.addAttribute("errorMessage", "Erreur lors de la mise à jour du patient");
         }
 
         return "edit-patient";
     }
+
+    private void initializeDefaultModelAttributes(Model model, UUID id) {
+        model.addAttribute("id", id.toString());
+        model.addAttribute("patientDto", new PatientDto());
+        model.addAttribute("age", "0");
+        model.addAttribute("noteDto", new NoteDto());
+        model.addAttribute("assessment", new AssessmentDto());
+    }
+
+    private PatientDto loadPatientData(UUID id, Model model) {
+        try {
+            PatientDto patientDto = patientFeignClient.getPatientById(id);
+            model.addAttribute("patientDto", patientDto);
+            model.addAttribute("age", patientService.calculateAge(patientDto.getBirthDate()));
+            return patientDto;
+        } catch (FeignException e) {
+            log.error("Error retrieving patient data for ID {}", id, e);
+            model.addAttribute("errorMessage", "Patient introuvable pour l'ID : " + id);
+        } catch (Exception e) {
+            log.error("Unexpected error retrieving patient data for ID {}", id, e);
+            model.addAttribute("errorMessage", "Une erreur inattendue est survenue lors du chargement du patient");
+        }
+        return null;
+    }
+
+    private void loadNotesData(UUID id, int pageIndex, int size, Model model) {
+        try {
+            NotesDto notesDto = noteFeignClient.getNotesByPatient(id.toString(), pageIndex, size);
+            model.addAttribute("notes", notesDto);
+        } catch (FeignException e) {
+            log.error("Error retrieving notes for patient {}", id, e);
+            model.addAttribute("notesError", "Notes indisponibles temporairement");
+        } catch (Exception e) {
+            log.error("Unexpected error retrieving notes for patient {}", id, e);
+            model.addAttribute("notesError", "Erreur lors du chargement des notes");
+        }
+    }
+
+    private void loadAssessmentData(UUID id, Model model) {
+        try {
+            AssessmentDto assessmentDto = assessmentFeignClient.assess(id);
+            model.addAttribute("assessment", assessmentDto);
+        } catch (FeignException e) {
+            log.error("Error retrieving assessment for patient {}", id, e);
+            model.addAttribute("assessmentError", "Évaluation indisponible temporairement");
+        } catch (Exception e) {
+            log.error("Unexpected error retrieving assessment for patient {}", id, e);
+            model.addAttribute("assessmentError", "Erreur lors du chargement de l'évaluation");
+        }
+    }
+
 }
