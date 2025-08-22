@@ -60,7 +60,6 @@ public class AssessmentService {
             int triggerCount = countTriggerTerms(notes);
 
             RiskLevel riskLevel = calculateRiskLevel(age, patient.getGender().name(), triggerCount);
-            log.info("Patient {} assessed with risk level: {}, trigger count: {}", patientId, riskLevel, triggerCount);
 
             AssessmentDto assessmentDto = new AssessmentDto();
             assessmentDto.setRiskLevel(riskLevel);

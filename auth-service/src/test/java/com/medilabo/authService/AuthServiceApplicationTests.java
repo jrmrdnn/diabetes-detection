@@ -1,14 +1,17 @@
 package com.medilabo.authService;
 
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-import org.junit.jupiter.api.Test;
-
+@SpringBootTest
+@ActiveProfiles("test")
 class AuthServiceApplicationTests {
 
-  @Test
-  void contextLoads() {
-    String[] args = { "--spring.profiles.active=test" };
-    assertDoesNotThrow(() -> AuthServiceApplication.main(args));
-  }
+    @Test
+    void contextLoads() {
+        assertDoesNotThrow(() -> AuthServiceApplication.main(new String[]{}));
+    }
 }

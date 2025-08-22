@@ -8,7 +8,6 @@ class NoteServiceApplicationTests {
 
   @Test
   void contextLoads() {
-    String[] args = { "--spring.profiles.active=test" };
-    assertDoesNotThrow(() -> NoteServiceApplication.main(args));
+    assertDoesNotThrow(() -> NoteServiceApplication.main(new String[]{}));
   }
 }
