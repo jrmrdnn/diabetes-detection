@@ -1,8 +1,6 @@
 package com.medilabo.frontendService.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**

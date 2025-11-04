@@ -6,13 +6,16 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 
+/**
+ * Security configuration for the auth service.
+ * This configuration disables CSRF protection and allows all requests.
+ */
 @Configuration
 public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(AbstractHttpConfigurer::disable) // Disable CSRF protection
-                .authorizeHttpRequests((auth) -> auth.anyRequest().permitAll()); // Allow all requests to the auth service
+        http.csrf(AbstractHttpConfigurer::disable) // Disable CSRF protection
+             .authorizeHttpRequests((auth) -> auth.anyRequest().permitAll()); // Allow all requests to the auth service
         return http.build(); // Build the security
     }
 }

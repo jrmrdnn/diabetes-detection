@@ -1,23 +1,25 @@
 package com.medilabo.patientService.dto;
 
 import com.medilabo.patientService.model.Gender;
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
-
+/**
+ * Data Transfer Object for Patient information.
+ */
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class PatientDto {
 
-    private String firstName;
-    private String lastName;
-    private LocalDate birthDate;
-    private Gender gender;
-    private String postalAddress;
-    private String phoneNumber;
+  private String firstName;
+  private String lastName;
+  private LocalDate birthDate;
+  private Gender gender;
+  private String postalAddress;
+  private String phoneNumber;
 }

@@ -7,6 +7,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
+/**
+ * Repository interface for Note entity.
+ */
 @Repository
 public interface NoteRepository extends MongoRepository<Note, String> {
   Page<Note> findByPatient(String patient, Pageable pageable);

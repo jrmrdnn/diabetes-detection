@@ -1,12 +1,17 @@
 package com.medilabo.frontendService.service;
 
-import com.medilabo.frontendService.dto.PatientDto;
-import com.medilabo.frontendService.dto.PatientsDto;
-import lombok.NonNull;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 
+import org.springframework.stereotype.Service;
+
+import com.medilabo.frontendService.dto.PatientDto;
+import com.medilabo.frontendService.dto.PatientsDto;
+
+import lombok.NonNull;
+
+/**
+ * Service class for patient-related operations.
+ */
 @Service
 public class PatientService {
 

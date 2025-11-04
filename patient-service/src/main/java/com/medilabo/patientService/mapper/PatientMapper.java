@@ -5,12 +5,15 @@ import com.medilabo.patientService.model.Patient;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
+/**
+ * Mapper interface for converting between Patient entities and PatientDto objects.
+ */
 @Mapper(
-        componentModel = "spring",
-        unmappedTargetPolicy = ReportingPolicy.IGNORE
+  componentModel = "spring",
+  unmappedTargetPolicy = ReportingPolicy.IGNORE
 )
 public interface PatientMapper {
-    PatientDto toDto(Patient patient);
+  PatientDto toDto(Patient patient);
 
-    Patient toPatient(PatientDto patientDto);
+  Patient toPatient(PatientDto patientDto);
 }

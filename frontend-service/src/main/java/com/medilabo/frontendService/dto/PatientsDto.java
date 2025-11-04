@@ -1,11 +1,14 @@
 package com.medilabo.frontendService.dto;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.List;
 import java.util.UUID;
 
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ * Data Transfer Object for paginated patients.
+ */
 @Getter
 @Setter
 public class PatientsDto extends PaginatedDto {

@@ -1,17 +1,29 @@
 package com.medilabo.frontendService.controller;
 
-import com.medilabo.frontendService.dto.NoteDto;
-import com.medilabo.frontendService.feign.NoteFeignClient;
-import feign.FeignException;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.medilabo.frontendService.dto.NoteDto;
+import com.medilabo.frontendService.feign.NoteFeignClient;
+
+import feign.FeignException;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+
+/**
+ * Controller for handling note-related requests.
+ * Provides endpoints for adding, updating, and deleting notes.
+ */
 @Controller
 @RequestMapping("/note")
 @RequiredArgsConstructor

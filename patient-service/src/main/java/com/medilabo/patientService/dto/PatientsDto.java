@@ -5,6 +5,9 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Data Transfer Object for a paginated list of Patients.
+ */
 @Getter
 @Setter
 public class PatientsDto {

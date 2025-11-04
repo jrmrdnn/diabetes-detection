@@ -6,6 +6,9 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Data Transfer Object for paginated notes.
+ */
 @Getter
 @Setter
 public class NotesDto extends PaginatedDto {

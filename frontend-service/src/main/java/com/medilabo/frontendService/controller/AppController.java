@@ -1,8 +1,5 @@
 package com.medilabo.frontendService.controller;
 
-import com.medilabo.frontendService.dto.PatientsDto;
-import com.medilabo.frontendService.feign.PatientFeignClient;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,6 +7,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.medilabo.frontendService.dto.PatientsDto;
+import com.medilabo.frontendService.feign.PatientFeignClient;
+
+import lombok.RequiredArgsConstructor;
+
+/**
+ * Controller for handling application-related requests.
+ * Provides the main application view with patient data.
+ */
 @Controller
 @RequestMapping("/app")
 @RequiredArgsConstructor
